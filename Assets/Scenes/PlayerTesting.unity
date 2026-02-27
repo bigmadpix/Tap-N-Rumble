@@ -665,18 +665,6 @@ PrefabInstance:
       value: RedLeague_Boxer
       objectReference: {fileID: 0}
     - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 5.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.7071068
       objectReference: {fileID: 0}
