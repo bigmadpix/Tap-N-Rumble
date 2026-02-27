@@ -327,6 +327,7 @@ GameObject:
   - component: {fileID: 543585525}
   - component: {fileID: 543585524}
   - component: {fileID: 543585523}
+  - component: {fileID: 543585526}
   m_Layer: 0
   m_Name: HandR
   m_TagString: Untagged
@@ -423,6 +424,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543585521}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &543585526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543585521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0979c0a1d0f62bf4f9798473756939fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHitboxActive: 0
 --- !u!1 &575609884
 GameObject:
   m_ObjectHideFlags: 0
@@ -664,6 +678,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RedLeague_Boxer
       objectReference: {fileID: 0}
+    - target: {fileID: 5438741696640516756, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.7071068
@@ -713,6 +731,7 @@ GameObject:
   - component: {fileID: 1772580039}
   - component: {fileID: 1772580038}
   - component: {fileID: 1772580037}
+  - component: {fileID: 1772580040}
   m_Layer: 0
   m_Name: HandL
   m_TagString: Untagged
@@ -809,6 +828,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1772580035}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1772580040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772580035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0979c0a1d0f62bf4f9798473756939fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHitboxActive: 0
 --- !u!1001 &362707831228777650
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -833,6 +865,14 @@ PrefabInstance:
       propertyPath: camSpeed
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 5465417078144460768, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
+      propertyPath: leftFist
+      value: 
+      objectReference: {fileID: 1772580035}
+    - target: {fileID: 5465417078144460768, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
+      propertyPath: rightFist
+      value: 
+      objectReference: {fileID: 543585521}
     - target: {fileID: 5465417078144460768, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
       propertyPath: dodgeRecovery
       value: 0.5

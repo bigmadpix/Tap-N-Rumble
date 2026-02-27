@@ -24,12 +24,14 @@ public class Player : MonoBehaviour
     public float camSpeed = 1f;
     public Animator anim;
     public AnimatorOverrideController controller;
+
+    public GameObject leftFist;
+    public GameObject rightFist;
     public enum MoveState
     {
         Neutral, 
-        DodgeL, 
-        DodgeB,
-        DodgeR
+        Dodge, 
+        Punch
         
         
     }
@@ -101,7 +103,6 @@ public class Player : MonoBehaviour
             return;
 
         }
-
     }
     public void OnFingerDown(Finger finger)
     {
@@ -156,6 +157,7 @@ public class Player : MonoBehaviour
             Debug.Log("Tapped."); 
             if (finger.screenPosition.x > 999)
             {
+                rightFist.GetComponent<PlayerFist>().isHitboxActive = true;
                 Debug.Log("Punch Right");
                 StopAllCoroutines();
                 StartCoroutine(Punch());
@@ -165,7 +167,7 @@ public class Player : MonoBehaviour
             else if (finger.screenPosition.x < 999)
             {
                 Debug.Log("Punch Left");
-
+                leftFist.GetComponent<PlayerFist>().isHitboxActive = true;
                 //rb.AddForce(new Vector3(-10,0,0));
                 StopAllCoroutines();
                 StartCoroutine(Punch()); 
@@ -180,11 +182,15 @@ public class Player : MonoBehaviour
     }
     public void Return()
     {
-
+        leftFist.GetComponent<PlayerFist>().isHitboxActive = false;
+        rightFist.GetComponent<PlayerFist>().isHitboxActive = false;
+        moveState = MoveState.Neutral;
         standingPos = Vector3.zero;
     }
     public IEnumerator Punch()
     {
+        moveState = MoveState.Punch;
+
         speed = 20;
         //rb.AddForce(new Vector3(-10,0,0));
         standingPos = Vector3.forward * 0.5f;
@@ -194,6 +200,7 @@ public class Player : MonoBehaviour
     }
     public IEnumerator DodgeLeft()
     {
+        moveState = MoveState.Dodge;
         speed = 5;
         //rb.AddForce(new Vector3(-10,0,0));
         standingPos = Vector3.right*-1;
@@ -203,6 +210,7 @@ public class Player : MonoBehaviour
     }
     public IEnumerator DodgeRight()
     {
+        moveState = MoveState.Dodge;
         speed = 5;
         //rb.AddForce(new Vector3(-10,0,0));
         standingPos = Vector3.right; 
@@ -211,6 +219,7 @@ public class Player : MonoBehaviour
     }
     public IEnumerator DodgeBack()
     {
+        moveState = MoveState.Dodge;
         speed = 5;
         //rb.AddForce(new Vector3(-10,0,0));
         standingPos = Vector3.back;
