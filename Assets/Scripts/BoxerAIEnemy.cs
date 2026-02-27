@@ -34,6 +34,7 @@ public class BoxerAIEnemy : MonoBehaviour
     public void GetPunched(float p)
     {
         stamina -= p;
+        Debug.Log("Enemy lost " +p+ " stamina.");
     }
 
     public void Punch(GameObject fist)
@@ -55,10 +56,14 @@ public class BoxerAIEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(stamina <= 0)
+        if (stamina <= 0)
         {
-            Wait(2f);
+            StartCoroutine(Wait(2f));
             Destroy(this.gameObject);
+        }
+        else
+        {
+
         }
 
     }

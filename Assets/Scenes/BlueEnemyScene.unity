@@ -674,31 +674,19 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5438741696640516756, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
-      propertyPath: m_Name
-      value: RedLeague_Boxer
-      objectReference: {fileID: 0}
-    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+    - target: {fileID: 7780303215606605344, guid: 584b11102ce66f4498bb1dcdcff32a43, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
-    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6766247080914568828, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+    - target: {fileID: 8445991643288473535, guid: 584b11102ce66f4498bb1dcdcff32a43, type: 3}
       propertyPath: m_Name
-      value: LeftGlove
+      value: BlueLeague_Boxer Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 584b11102ce66f4498bb1dcdcff32a43, type: 3}
 --- !u!1 &1772580035
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,7 +838,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 711dd8b825977dc4d9587512e25cf2fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 5438741696640516756, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+  enemy: {fileID: 8445991643288473535, guid: 584b11102ce66f4498bb1dcdcff32a43, type: 3}
   spawnPosition: {fileID: 0}
 --- !u!4 &1894769088
 Transform:
