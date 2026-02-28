@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class BoxerAIEnemy : MonoBehaviour
 {
-    public float stamina, speed, damage, percentKO;
+    public float stamina, speed, damage, percentKO, Points;
     Vector3 boxerPos;
+    private EnemySpawn Spawn;
+    //[SerializeField] TextMesh textMesh;
 
     public GameObject leftGlove, rightGlove;
     [SerializeField] private Transform lG, rG;
@@ -18,11 +20,13 @@ public class BoxerAIEnemy : MonoBehaviour
         speed = 10f;
         damage = 10;
         percentKO = 0.1f;
+        Points = 500;
         boxerPos = transform.position;
         leftGlove = lG.gameObject;
         rightGlove = rG.gameObject;
         Player = GameObject.Find("Player");
         rb = GetComponent<Rigidbody>();
+        Spawn = FindFirstObjectByType<EnemySpawn>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -51,6 +55,7 @@ public class BoxerAIEnemy : MonoBehaviour
     public IEnumerator Wait(float delay)
     {
         yield return new WaitForSeconds(delay);
+        
     }
 
     // Update is called once per frame
@@ -58,7 +63,7 @@ public class BoxerAIEnemy : MonoBehaviour
     {
         if (stamina <= 0)
         {
-            StartCoroutine(Wait(2f));
+            Spawn.SendMessage("AddPoints", Points);
             Destroy(this.gameObject);
         }
         else
