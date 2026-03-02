@@ -27,6 +27,14 @@ public class Player : MonoBehaviour
 
     public GameObject leftFist;
     public GameObject rightFist;
+
+    // Sensitivity and timing settings (adjustable in Inspector)
+    public float threshold = 2.0f;
+    public float shakeCooldown = 0.5f;
+
+    private Vector3 _lowPassValue;
+    private float _timeSinceLastShake = 0;
+
     public enum MoveState
     {
         Neutral, 
@@ -59,7 +67,9 @@ public class Player : MonoBehaviour
         // Calculate the journey length.
         journeyLength = Vector3.Distance(eyeBox.position, standingPos * 5f);
         anim.runtimeAnimatorController = controller;
-        
+
+        _lowPassValue = Input.acceleration;
+
     }
 
     // Update is called once per frame
@@ -70,6 +80,21 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        _timeSinceLastShake += Time.deltaTime;
+
+        // Apply low-pass filter to remove gravity
+        _lowPassValue = Vector3.Lerp(_lowPassValue, Input.acceleration, 0.1f);
+        Vector3 deltaAcceleration = Input.acceleration - _lowPassValue;
+
+        // Check for sharp movement exceeding the threshold
+        if (deltaAcceleration.sqrMagnitude >= threshold && _timeSinceLastShake >= shakeCooldown)
+        {
+            Debug.Log("Shake detected!");
+            // Trigger action (e.g., Handheld.Vibrate())
+            _timeSinceLastShake = 0;
+            OnShake();
+        }
+
         Vector3 deltaPos = transform.position - prev;
         deltaX = deltaPos.x;
 
@@ -104,10 +129,20 @@ public class Player : MonoBehaviour
 
         }
     }
+    public void OnShake()
+    {
+        Debug.Log("Initiating Super Special Move!!");
+        var enemy = GameObject.FindGameObjectWithTag("Enemy");
+        if (enemy != null) { enemy.GetComponent<BoxerAIEnemy>().GetPunched(999); } else
+        {
+            Debug.Log("Attack Missed. No Enemy Found");
+        }
+        
+    }
     public void OnFingerDown(Finger finger)
     {
         startPosTouch = finger.screenPosition;
-        //Debug.Log(finger.screenPosition);
+        Debug.Log(finger.screenPosition);
         
 
     }
@@ -155,7 +190,7 @@ public class Player : MonoBehaviour
         else
         {
             Debug.Log("Tapped."); 
-            if (finger.screenPosition.x > 999)
+            if (finger.screenPosition.x > Screen.width/2)
             {
                 rightFist.GetComponent<PlayerFist>().isHitboxActive = true;
                 Debug.Log("Punch Right");
@@ -164,7 +199,7 @@ public class Player : MonoBehaviour
                 //overrideController["Idle"] = newRunClip;
                 anim.SetTrigger("PunchR");
             }
-            else if (finger.screenPosition.x < 999)
+            else if (finger.screenPosition.x < Screen.width / 2)
             {
                 Debug.Log("Punch Left");
                 leftFist.GetComponent<PlayerFist>().isHitboxActive = true;
