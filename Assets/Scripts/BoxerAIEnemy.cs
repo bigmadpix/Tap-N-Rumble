@@ -1,11 +1,16 @@
 using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Unity.VisualScripting;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class BoxerAIEnemy : MonoBehaviour
 {
-    public float stamina, speed, damage, percentDodge, Points;
+    [SerializeField] private string type;
+    public float stamina, speed, damage, percentDodge, percentBlock, Points;
+    static int nextPunch = 0;
     Vector3 boxerPos, prev;
     private EnemySpawn Spawn;
     //[SerializeField] TextMesh textMesh;
@@ -25,17 +30,44 @@ public class BoxerAIEnemy : MonoBehaviour
     {
         Default,
         Punch,
+        LeftHook,
+        RightHook,
         Dodge,
+        Block,
         tookDamage
     }
 
     private void Awake()
     {
-        stamina = 100;
-        speed = 10f;
-        damage = 10;
-        percentDodge = 0.30f;
+        int i = Random.Range(0, 3);
+        switch (i){ 
+            case 0:
+                type = "Attack";
+                stamina = 200;
+                damage = 10;
+                percentDodge = 0.60f;
+                percentBlock = 0.40f;
+                Debug.Log("New Enemy: ATTACK");
+                break;
+            case 1:
+                type = "Tank";
+                stamina = 400;
+                damage = 25;
+                percentDodge = 0.20f;
+                percentBlock = 0.50f;
+                Debug.Log("New Enemy: TANK");
+                break;
+            case 2:
+                type = "Quick";
+                stamina = 100;
+                damage = 15;
+                percentDodge = 0.80f;
+                percentBlock = 0.10f;
+                Debug.Log("New Enemy: QUICK");
+                break;
+        }
         Points = 500;
+        speed = 10f;
         boxerPos = transform.position;
         leftGlove = lG.gameObject;
         rightGlove = rG.gameObject;
@@ -44,6 +76,9 @@ public class BoxerAIEnemy : MonoBehaviour
         Spawn = FindFirstObjectByType<EnemySpawn>();
         ES = EnemyState.Default;
         enemyMat = GetComponent<Renderer>().material;
+        animator = GetComponent<Animator>();
+        aoc = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        animator.runtimeAnimatorController = aoc;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -66,11 +101,34 @@ public class BoxerAIEnemy : MonoBehaviour
 
     }
 
-    public IEnumerator Punch(GameObject fist)
+    public IEnumerator Punch(float f)
     {
-        fist.GetComponent<Rigidbody>().MovePosition(Player.GetComponent<Transform>().position);
-        //fist.GetComponent<Rigidbody>().MovePosition(Player.GetComponent<Transform>().position);
-        yield return null;
+        //ES = EnemyState.Punch;
+        //Debug.Log("Enemy makes a punch");
+        //speed = 20f;
+        //boxerPos = Vector3.forward * -0.5f;
+        //boxerPos = Vector3.forward * 0.5f;
+
+        //if (nextPunch%2 == 0)
+        //{
+        //    //leftGlove.GetComponent<EnemyFist>().ColliderOn = true;
+        //    //leftGlove.GetComponent<Rigidbody>().AddForce(-10, 0, 0);
+        //    //leftGlove.GetComponent<Rigidbody>().AddForce(10, 0, 0);
+        //    animator.SetTrigger("PunchL");
+        //}
+        //else
+        //{
+        //    //rightGlove.gameObject.GetComponent<EnemyFist>().ColliderOn = true;
+        //    //rightGlove.GetComponent<Rigidbody>().AddForce(-10, 0, 0);
+        //    //rightGlove.GetComponent<Rigidbody>().AddForce(10, 0, 0);
+        //    animator.SetTrigger("PunchR");
+        //}
+
+        yield return new WaitForSeconds(f);
+        ES = EnemyState.Default;
+
+        speed = 10f;
+        nextPunch++;
     }
 
     public IEnumerator dodge(float dir)
@@ -83,6 +141,13 @@ public class BoxerAIEnemy : MonoBehaviour
         boxerPos += Vector3.left * -dir;
         ReturnToDef();
         yield return new WaitForSeconds(1);
+    }
+
+    public IEnumerator block()
+    {
+        ES = EnemyState.Block;
+        yield return new WaitForSeconds(1);
+        ES = EnemyState.Default;
     }
 
     public IEnumerator Wait(float delay)
@@ -124,15 +189,30 @@ public class BoxerAIEnemy : MonoBehaviour
 
         if (Player != null)
         {
-            if (Player.moveState == Player.MoveState.Punch && ES != EnemyState.Dodge && ES != EnemyState.tookDamage)
+            if (ES == EnemyState.Default)
             {
-                float r = Random.value;
-                if (r <= percentDodge)
+                StopAllCoroutines();
+                if (Player.moveState == Player.MoveState.Punch)
                 {
-                    Debug.Log("Random value: "+r);
-                    StartCoroutine("dodge", 3f);
-                    //StartCoroutine(changePercent(r));
+                    float DG = Random.value;
+                    if (DG <= percentDodge)
+                    {
+                        //Debug.Log("Random value: " + DG);
+                        if(Random.value <= 0.5)
+                            StartCoroutine("dodge", 3f);
+                        else 
+                            StartCoroutine("dodge", -3f);
+                        //StartCoroutine(changePercent(r));
+                    }
                 }
+                //else
+                //{
+                //    float r = Random.Range(0.5f, 3f);
+                //    StartCoroutine("Punch", r);
+                //}
+                //leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
+                //rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
+                
             }
         }
 
