@@ -85,7 +85,11 @@ public class BoxerAIEnemy : MonoBehaviour
         enemyMat = GetComponent<Renderer>().material;
         animator = GetComponent<Animator>();
         aoc = new AnimatorOverrideController(animator.runtimeAnimatorController);
+
         animator.runtimeAnimatorController = aoc;
+        anim = GetComponent<Animator>();
+        controller = new AnimatorOverrideController(anim.runtimeAnimatorController);
+        anim.runtimeAnimatorController = controller;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -95,9 +99,7 @@ public class BoxerAIEnemy : MonoBehaviour
 
     }
 
-        anim = GetComponent<Animator>();
-        controller = new AnimatorOverrideController(anim.runtimeAnimatorController);
-        anim.runtimeAnimatorController = controller;
+        
 
     public void GetPunched(float p)
     {
@@ -238,12 +240,15 @@ public class BoxerAIEnemy : MonoBehaviour
         {
 
         }
+
+        //LEFT PUNCH TESTING ANIMATIONS
         if (Keyboard.current.leftArrowKey.wasReleasedThisFrame)
         {
             anim.SetTrigger("PunchL");
             transform.localScale = new Vector3(1, 1, 1f);
         }
 
+        //RIGHT PUNCH TESTING ANIMATIONS
         if (Keyboard.current.rightArrowKey.wasReleasedThisFrame)
         {
             anim.SetTrigger("PunchR");
