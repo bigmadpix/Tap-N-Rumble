@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BoxerAIEnemy : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class BoxerAIEnemy : MonoBehaviour
     [SerializeField] private Transform lG, rG;
     public GameObject Player;
     private Rigidbody rb;
-
+    public Animator anim;
+    public AnimatorOverrideController controller;
     private void Awake()
     {
         stamina = 100;
@@ -27,6 +29,10 @@ public class BoxerAIEnemy : MonoBehaviour
         Player = GameObject.Find("Player");
         rb = GetComponent<Rigidbody>();
         Spawn = FindFirstObjectByType<EnemySpawn>();
+
+        anim = GetComponent<Animator>();
+        controller = new AnimatorOverrideController(anim.runtimeAnimatorController);
+        anim.runtimeAnimatorController = controller;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -70,6 +76,14 @@ public class BoxerAIEnemy : MonoBehaviour
         {
 
         }
+        if (Keyboard.current.leftArrowKey.wasReleasedThisFrame)
+        {
+            anim.SetTrigger("PunchL");
+        }
 
+        if (Keyboard.current.rightArrowKey.wasReleasedThisFrame)
+        {
+            anim.SetTrigger("PunchR");
+        }
     }
 }
