@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 2707052417686169363}
   - component: {fileID: 5403235427605826270}
   - component: {fileID: 6286248845545011379}
+  - component: {fileID: 6539428654430624465}
   m_Layer: 0
   m_Name: RedLeague_Boxer
   m_TagString: Enemy
@@ -173,7 +174,7 @@ Transform:
   - {fileID: 2987766516609086611}
   - {fileID: 717629214850117237}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &7333929501765909896
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -266,11 +267,14 @@ MonoBehaviour:
   speed: 0
   damage: 0
   percentKO: 0
+  Points: 0
   leftGlove: {fileID: 0}
   rightGlove: {fileID: 0}
   lG: {fileID: 717629214850117237}
   rG: {fileID: 2987766516609086611}
   Player: {fileID: 0}
+  anim: {fileID: 6539428654430624465}
+  controller: {fileID: 0}
 --- !u!54 &6286248845545011379
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -298,6 +302,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &6539428654430624465
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5438741696640516756}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fb3f1e7da5b09864eb0f3ebd33073d12, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6766247080914568828
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +338,7 @@ GameObject:
   - component: {fileID: 5959916849546684770}
   - component: {fileID: 8450720315110305185}
   m_Layer: 0
-  m_Name: RightGlove (1)
+  m_Name: LeftGlove
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

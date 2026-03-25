@@ -798,10 +798,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5403235427605826270, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
-      propertyPath: anim
-      value: 
-      objectReference: {fileID: 1328498186}
     - target: {fileID: 5438741696640516756, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
       propertyPath: m_Name
       value: RedLeague_Boxer
@@ -811,8 +807,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
       propertyPath: m_LocalPosition.z
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6175924837126646539, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -833,38 +849,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5438741696640516756, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1328498186}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
---- !u!1 &1328498185 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5438741696640516756, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
-  m_PrefabInstance: {fileID: 1328498184}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1328498186
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1328498185}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fb3f1e7da5b09864eb0f3ebd33073d12, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1848474497
 GameObject:
   m_ObjectHideFlags: 0

@@ -79,11 +79,13 @@ public class BoxerAIEnemy : MonoBehaviour
         if (Keyboard.current.leftArrowKey.wasReleasedThisFrame)
         {
             anim.SetTrigger("PunchL");
+            transform.localScale = new Vector3(1, 1, 1f);
         }
 
         if (Keyboard.current.rightArrowKey.wasReleasedThisFrame)
         {
             anim.SetTrigger("PunchR");
+            transform.localScale = new Vector3(1,1,-1f);
         }
     }
 }
