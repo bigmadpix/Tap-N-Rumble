@@ -68,7 +68,7 @@ public class Player : MonoBehaviour
         journeyLength = Vector3.Distance(eyeBox.position, standingPos * 5f);
         anim.runtimeAnimatorController = controller;
 
-        _lowPassValue = Input.acceleration;
+        _lowPassValue = Accelerometer.current.acceleration.ReadValue();
 
     }
 
@@ -83,8 +83,8 @@ public class Player : MonoBehaviour
         _timeSinceLastShake += Time.deltaTime;
 
         // Apply low-pass filter to remove gravity
-        _lowPassValue = Vector3.Lerp(_lowPassValue, Input.acceleration, 0.1f);
-        Vector3 deltaAcceleration = Input.acceleration - _lowPassValue;
+        _lowPassValue = Vector3.Lerp(_lowPassValue, Accelerometer.current.acceleration.ReadValue(), 0.1f);
+        Vector3 deltaAcceleration = Accelerometer.current.acceleration.ReadValue() - _lowPassValue;
 
         // Check for sharp movement exceeding the threshold
         if (deltaAcceleration.sqrMagnitude >= threshold && _timeSinceLastShake >= shakeCooldown)

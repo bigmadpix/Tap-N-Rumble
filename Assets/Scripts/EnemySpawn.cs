@@ -36,7 +36,8 @@ public class EnemySpawn : MonoBehaviour
     IEnumerator Cooldown()
     {
         yield return new WaitForSeconds(3f);
-        spawnEnemy();
+        LevelManager.instance.FinishCombat();
+        //spawnEnemy();
         StopAllCoroutines();
     }
     // Update is called once per frame
