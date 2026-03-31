@@ -85,9 +85,11 @@ public class Player : MonoBehaviour
         // Calculate the journey length.
         journeyLength = Vector3.Distance(eyeBox.position, standingPos * 5f);
         anim.runtimeAnimatorController = controller;
-
-        // Start the Accelerometer
-        _lowPassValue = Accelerometer.current.acceleration.ReadValue();
+        if (Accelerometer.current != null)
+        {
+            // Start the Accelerometer
+            _lowPassValue = Accelerometer.current.acceleration.ReadValue();
+        }
 
         //Changes the color of the gloves on the player 
         leftFist.GetComponent<Renderer>().material.color = V.GloveColor;
