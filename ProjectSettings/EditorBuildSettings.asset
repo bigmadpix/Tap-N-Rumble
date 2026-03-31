@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RedEnemyLevel.unity
     guid: 3715c0f5a99e32847b542367c98760b7
+  - enabled: 1
+    path: Assets/Scenes/Shop.unity
+    guid: 663424892e5aedd4ea386e950d86beb3
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

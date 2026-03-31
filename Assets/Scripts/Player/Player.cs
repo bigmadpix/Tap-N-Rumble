@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -59,7 +60,10 @@ public class Player : MonoBehaviour
         // Calculate the journey length.
         journeyLength = Vector3.Distance(eyeBox.position, standingPos * 5f);
         anim.runtimeAnimatorController = controller;
-        
+
+        //Changes the color of the gloves on the player 
+        leftFist.GetComponent<Renderer>().material.color = V.GloveColor;
+        rightFist.GetComponent<Renderer>().material.color = V.GloveColor;
     }
 
     // Update is called once per frame
