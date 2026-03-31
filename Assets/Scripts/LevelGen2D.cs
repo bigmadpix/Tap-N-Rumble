@@ -122,6 +122,7 @@ public class LevelGen2D : MonoBehaviour
         if (isChild || isFinalGoal)
         {
             SelectNode(clickedNode);
+            clickedNode.GetComponent<LevelNode>().OnNodeEnter();
         }
         else
         {
@@ -129,7 +130,7 @@ public class LevelGen2D : MonoBehaviour
         }
 
         // Run the node's code based on Node Type
-        clickedNode.GetComponent<LevelNode>().OnNodeEnter();
+        
     }
 
     void SelectNode(GameObject newNode)

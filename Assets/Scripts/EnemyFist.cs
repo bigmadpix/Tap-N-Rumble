@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyFist : MonoBehaviour
@@ -9,24 +10,31 @@ public class EnemyFist : MonoBehaviour
     private void Awake()
     {
         enemy = GetComponentInParent<BoxerAIEnemy>();
+
+    }
+    private void Update()
+    {
         damage = enemy.damage;
     }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
         {
-            if (ColliderOn) { 
+
+            if (ColliderOn) {
+
                 Debug.Log("Player got punched");
-                other.gameObject.GetComponent<Player>().SendMessage("PlayerGotPunched");
+                other.gameObject.GetComponentInParent<Player>().OnHit(damage);
                 ColliderOn = false;
+
+                
             }
         }
         if (other.gameObject.tag == "Fist")
         {
             if (ColliderOn)
             {
-                Debug.Log("Block");
+                //Debug.Log("Block");
             }
         }
     }

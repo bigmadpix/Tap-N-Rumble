@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
     }
     public void GoMenu()
     {
+        SceneManager.UnloadSceneAsync("RedEnemyLevel");
         SceneManager.LoadScene("MainMenu");
     }
     public void FinishCombat()

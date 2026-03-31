@@ -52,8 +52,8 @@ public class EnemySpawn : MonoBehaviour
             Miss.text = "KO!";
             Miss.enabled = true;
             OppStam.enabled = false;
-            Debug.Log("New enemy spawning in 3...2...1...");
-            StartCoroutine(Cooldown());
+            //Debug.Log("New enemy spawning in 3...2...1...");
+            LevelManager.instance.FinishCombat();
         }
         else
         {
