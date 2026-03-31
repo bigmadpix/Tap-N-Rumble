@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 5898222177849069271}
   m_Layer: 0
   m_Name: HandL
-  m_TagString: Untagged
+  m_TagString: Fist
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -415,7 +415,7 @@ GameObject:
   - component: {fileID: 3258178635740414218}
   m_Layer: 0
   m_Name: HandR
-  m_TagString: Untagged
+  m_TagString: Fist
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
