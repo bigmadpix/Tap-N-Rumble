@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
+using static BoxerAIEnemy;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 public class Player : MonoBehaviour
 {
@@ -35,6 +36,8 @@ public class Player : MonoBehaviour
     private Vector3 _lowPassValue;
     private float _timeSinceLastShake = 0;
 
+    [SerializeField] private float pStamina;
+
     public enum MoveState
     {
         Neutral, 
@@ -51,6 +54,7 @@ public class Player : MonoBehaviour
         EnhancedTouchSupport.Enable();
         Touch.onFingerDown += OnFingerDown; 
         Touch.onFingerUp += OnFingerUp;
+        pStamina = 100f;
     }
     void OnDisable()
     {
@@ -129,6 +133,13 @@ public class Player : MonoBehaviour
 
         }
     }
+
+    public void PlayerGotPunched(float p)
+    {
+        pStamina -= p;
+        Debug.Log("Enemy lost " + p + " stamina.");
+    }
+
     public void OnShake()
     {
         Debug.Log("Initiating Super Special Move!!");
@@ -139,13 +150,13 @@ public class Player : MonoBehaviour
         }
         
     }
+
     public void OnFingerDown(Finger finger)
     {
         startPosTouch = finger.screenPosition;
-        Debug.Log(finger.screenPosition);
-        
-
+        //Debug.Log(finger.screenPosition);
     }
+
     private void OnFingerUp(Finger finger)
     {
         Vector2 endPos = finger.screenPosition;
