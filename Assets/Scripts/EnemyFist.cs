@@ -34,7 +34,7 @@ public class EnemyFist : MonoBehaviour
         {
             if (ColliderOn)
             {
-                //Debug.Log("Block");
+                Debug.Log("Block");
             }
         }
     }
