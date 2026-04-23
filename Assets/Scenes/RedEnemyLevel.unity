@@ -499,6 +499,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1e8da9031b4674495a55b11069ccc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &451375184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 451375175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5972a60e429b4884fb5ff4a2e4c13080, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &575609884
 GameObject:
   m_ObjectHideFlags: 0
@@ -841,6 +853,10 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 1693844632}
+    - target: {fileID: 5403235427605826270, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+      propertyPath: attackSpeed
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5403235427605826270, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
       propertyPath: enemyPatterns
       value: 
@@ -1229,6 +1245,10 @@ PrefabInstance:
       propertyPath: dodgeRecovery
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5465417078144460768, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
+      propertyPath: perks.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5904028241970433468, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.5415821
@@ -1279,6 +1299,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2435100245690998514, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
       insertIndex: -1
       addedObject: {fileID: 451375181}
+    - targetCorrespondingSourceObject: {fileID: 2435100245690998514, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 451375184}
     - targetCorrespondingSourceObject: {fileID: 3001940521842189681, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9560128}

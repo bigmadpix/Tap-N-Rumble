@@ -37,6 +37,8 @@ public class BoxerAIEnemy : MonoBehaviour
     public AnimatorOverrideController aoc;
 
     public bool patternStarted, dodgeStarted;
+
+    public float attackSpeed = 1f;
     
     public enum EnemyState
     {
@@ -207,11 +209,13 @@ public class BoxerAIEnemy : MonoBehaviour
         {
             case "L":
                 leftGlove.GetComponent<EnemyFist>().ColliderOn = true;
+                anim.SetFloat("Speed",attackSpeed);
                 anim.SetTrigger("PunchL");
                 transform.localScale = new Vector3(1, 1, 1f);
                 break;
             case "R":
                 rightGlove.GetComponent<EnemyFist>().ColliderOn = true;
+                anim.SetFloat("Speed", attackSpeed);
                 anim.SetTrigger("PunchR");
                 transform.localScale = new Vector3(1, 1, -1f);
                 break;
@@ -239,7 +243,7 @@ public class BoxerAIEnemy : MonoBehaviour
                 {
                     //StartCoroutine("Punch", patt);
                     Punch(M);
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(0.5f * (1+(1-attackSpeed)));
                 }
                 if (M == "D")
                 {

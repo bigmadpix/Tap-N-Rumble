@@ -4,6 +4,12 @@ using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
+[System.Serializable]
+public class WeightedItem
+{
+    public LevelNode.NodeType type;
+    public int weight;
+}
 public class LevelGen2D : MonoBehaviour
 {
     [Header("Prefabs")]
@@ -24,6 +30,7 @@ public class LevelGen2D : MonoBehaviour
     private GameObject finalNode;
     private List<GameObject> leafNodes = new List<GameObject>();
 
+    public List<WeightedItem> lootTable;
     void Start()
     {
         if (nodePrefab == null || linePrefab == null || canvasRoot == null)
@@ -52,6 +59,31 @@ public class LevelGen2D : MonoBehaviour
     {
         LevelManager.instance.currentNode = currentNode.GetComponent<LevelNode>();
     }
+
+
+ 
+
+        public LevelNode.NodeType GetWeightedRandomItem()
+        {
+            int totalWeight = 0;
+            foreach (var item in lootTable)
+            {
+                totalWeight += item.weight;
+            }
+
+            int randomPoint = Random.Range(0, totalWeight);
+
+            foreach (var item in lootTable)
+            {
+                if (randomPoint < item.weight)
+                {
+                    return item.type;
+                }
+                randomPoint -= item.weight;
+            }
+            return LevelNode.NodeType.Combat;
+        }
+    
     void GenerateNode(Vector2 localPos, float currentAngle, float availableSpread, int depth, GameObject parentObj)
     {
         // Instantiate as a child of the parentObj to create a real hierarchy
@@ -60,8 +92,19 @@ public class LevelGen2D : MonoBehaviour
 
         RectTransform rect = instance.GetComponent<RectTransform>();
         rect.localPosition = localPos;
-        instance.GetComponent<LevelNode>().nodeType = LevelNode.NodeType.Combat;
+        /*
+        if(depth == (maxDepth))
+        {
+            instance.GetComponent<LevelNode>().nodeType = LevelNode.NodeType.Rest;
+        }
+        else
+        {
+            instance.GetComponent<LevelNode>().nodeType = LevelNode.NodeType.Combat;
+        }
+        */
 
+        var rand = Random.Range(1,4);
+        instance.GetComponent<LevelNode>().nodeType = GetWeightedRandomItem();
         // Add the click listener
         Button btn = instance.GetComponent<Button>();
         btn.onClick.AddListener(() => OnNodeClicked(instance));

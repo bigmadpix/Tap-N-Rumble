@@ -34,6 +34,7 @@ public class LevelManager : MonoBehaviour
     }
     public void FinishCombat()
     {
+        GameManager.instance.UpdatePlayerData(Player.instance);
         SceneManager.UnloadSceneAsync("RedEnemyLevel");
         ToggleMap(true);
 

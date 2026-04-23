@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections;
 using System.Drawing;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using static BoxerAIEnemy;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
+using System;
 public class Player : MonoBehaviour
 {
     public Transform eyeBox;
@@ -40,6 +42,18 @@ public class Player : MonoBehaviour
     [SerializeField] private float playerStamina = 100;
     private float playerSP = 0;
 
+    public static Player instance;
+    public List<Perk> perks;
+
+
+    //Events for any script that refrences the player.
+    public static event Action OnDodgeSuccess;
+    public static event Action OnComboIncrease;
+    public static event Action OnPassive;
+    public static event Action OnKnockout;
+    public static event Action OnPunch;
+    //public static event Action OnHit;
+
     public enum MoveState
     {
         Neutral, 
@@ -56,6 +70,7 @@ public class Player : MonoBehaviour
         if (Accelerometer.current != null)
         {
             InputSystem.EnableDevice(Accelerometer.current);
+            
         }
     }
     private void Awake()
@@ -78,6 +93,11 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
+        instance = this;
+        if (GameManager.instance != null)
+        {
+            LoadData(GameManager.instance.playerDat);
+        }
         rb = GetComponent<Rigidbody>();
         // Keep a note of the time the movement started.
         startTime = Time.time;
@@ -94,8 +114,14 @@ public class Player : MonoBehaviour
         //Changes the color of the gloves on the player 
         leftFist.GetComponent<Renderer>().material.color = V.GloveColor;
         rightFist.GetComponent<Renderer>().material.color = V.GloveColor;
+
+        OnDodgeSuccess();
     }
 
+    public void LoadData(PlayerData data)
+    {
+        playerStamina = data.currHP;
+    }
     public float GetHP()
     {
         return playerStamina;
@@ -171,6 +197,8 @@ public class Player : MonoBehaviour
             return;
 
         }
+
+        OnPassive();
     }
 
     public void PlayerGotPunched(float p)
