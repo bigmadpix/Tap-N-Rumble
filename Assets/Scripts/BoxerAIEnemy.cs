@@ -13,8 +13,8 @@ using Debug = UnityEngine.Debug;
 
 public class BoxerAIEnemy : MonoBehaviour
 {
-    [SerializeField] private string type;
-    public float stamina, speed, damage, percentDodge, percentBlock, Points, dodgeTime;
+    [SerializeField] private string type, difficulty;
+    public float stamina, speed, damage, atkSpeed, defSpeed, percentDodge, percentBlock, Points, dodgeTime;
     static int nextPunch = 0, next = 0;
     Vector3 boxerPos, prev;
     private EnemySpawn Spawn;
@@ -34,11 +34,12 @@ public class BoxerAIEnemy : MonoBehaviour
     public Player Player;
     private Rigidbody rb;
     public EnemyState ES;
+    public Difficulty DF;
     public Animator anim;
     public AnimatorOverrideController aoc;
 
 
-    public bool patternStarted, dodgeStarted;
+    public bool patternStarted, dodgeStarted, blockStarted;
     
     public enum EnemyState
     {
@@ -48,14 +49,20 @@ public class BoxerAIEnemy : MonoBehaviour
         tookDamage
     }
 
+    public enum Difficulty
+    {
+        Easy,
+        Normal,
+        Hard
+    }
+
     //public Animator anim;
     //public AnimatorOverrideController controller;
     private void Awake()
     {
-        int i = Random.Range(0, 3);
-        switch (i){ 
-            case 0:
-                type = "Attack";
+        
+        switch (type){ 
+            case "Attack":
                 stamina = 200;
                 damage = 10;
                 percentDodge = 0.60f;
@@ -65,24 +72,22 @@ public class BoxerAIEnemy : MonoBehaviour
                 patterns = enemyPatterns.text.Split("\n");                
                 Debug.Log("New Enemy: ATTACK");
                 break;
-            case 1:
-                type = "Tank";
+            case "Tank":
                 stamina = 400;
                 damage = 25;
                 percentDodge = 0.20f;
-                dodgeTime = 5f;
+                dodgeTime = 3f;
                 percentBlock = 0.50f;
                 enemyPatterns = Resources.Load<TextAsset>("TankEnemy Patterns");
                 patterns = enemyPatterns.text.Split("\n");
                 ChargeUp = 0f;
                 Debug.Log("New Enemy: TANK");
                 break;
-            case 2:
-                type = "Quick";
+            case "Quick":
                 stamina = 100;
                 damage = 15;
                 percentDodge = 0.80f;
-                dodgeTime = 7f;
+                dodgeTime = 5f;
                 percentBlock = 0.10f;
                 enemyPatterns = Resources.Load<TextAsset>("QuickEnemy Patterns"); 
                 textTest = enemyPatterns.text;
@@ -90,7 +95,34 @@ public class BoxerAIEnemy : MonoBehaviour
                 ChargeUp = 0f;
                 Debug.Log("New Enemy: QUICK");
                 break;
+            default:
+                stamina = 200;
+                damage = 10;
+                percentDodge = 0.60f;
+                dodgeTime = 3f;
+                percentBlock = 0.40f;
+                enemyPatterns = Resources.Load<TextAsset>("AttackEnemy Patterns");
+                patterns = enemyPatterns.text.Split("\n");
+                Debug.Log("New Enemy: ATTACK");
+                break;
         }
+
+        switch (DF)
+        {
+            case Difficulty.Easy:
+                damage -= 5;
+                atkSpeed = 0.5f;
+                break;
+            case Difficulty.Normal:
+                damage += 0;
+                atkSpeed = 1f;
+                break;
+            case Difficulty.Hard:
+                damage += 5f;
+                atkSpeed = 1.5f;
+                break;
+        }
+
         Points = 500;
         speed = 10f;
         boxerPos = transform.position;
@@ -106,6 +138,7 @@ public class BoxerAIEnemy : MonoBehaviour
 
         patternStarted = false;
         dodgeStarted = false;
+        blockStarted = false;
         //foreach(string pattern in patterns)
         //{
         //    moveList.Add(pattern.Split(","));
@@ -132,8 +165,9 @@ public class BoxerAIEnemy : MonoBehaviour
     public void Punch(string p)
     {
         Debug.Log("Enemy makes a punch      " + p);
-        speed = 20f;
+        //speed = 20f;
 
+        anim.speed = atkSpeed;
         switch (p)
         {
             case "L":
@@ -149,11 +183,11 @@ public class BoxerAIEnemy : MonoBehaviour
             default:
                 break;
         }
-
+        anim.speed = 1;
         //yield return new WaitForSeconds(0.5f);
         //ES = EnemyState.Default;
 
-        speed = 10f;
+        //speed = 10f;
         //nextPunch++;
     }
 
@@ -179,7 +213,7 @@ public class BoxerAIEnemy : MonoBehaviour
                 }
                 if (M == "B")
                 {
-                    StartCoroutine("block");
+                    ES = EnemyState.Block;
                 }
                 leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
                 rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
@@ -194,7 +228,6 @@ public class BoxerAIEnemy : MonoBehaviour
         next = 0;
         ChargeUp += 20f;
         patternStarted = false;
-        ES = EnemyState.Dodge;
     }
 
     public IEnumerator dodge(float dir)
@@ -212,6 +245,8 @@ public class BoxerAIEnemy : MonoBehaviour
 
     public IEnumerator dodgePhase(float time)
     {
+
+        ES = EnemyState.Dodge;
         Debug.Log($"{time} dodge phase");
         yield return new WaitForSeconds(time);
         nextPunch++;
@@ -220,20 +255,28 @@ public class BoxerAIEnemy : MonoBehaviour
         Debug.Log("Dodge over");
     }
 
-    public IEnumerator block()
+    public IEnumerator block(float sec)
     {
+        blockStarted = true;
         GetComponent<Collider>().enabled = false;
-        anim.SetTrigger("block");
-        yield return new WaitForSeconds(2f);
+        anim.Play("Block(Start)");
+        yield return new WaitForSeconds(sec);
+        anim.Play("Block(End)");
+        nextPunch++;
+        next = 0;
+        ES = EnemyState.Punch;
         GetComponent<Collider>().enabled = true;
+        blockStarted = false;
     }
 
-    public IEnumerator blockPhase()
-    {
-        ES = EnemyState.Block;
-        yield return new WaitForSeconds(5);
-        ES = EnemyState.Punch;
-    }
+    //public IEnumerator blockPhase()
+    //{
+    //    ES = EnemyState.Block;
+    //    yield return new WaitForSeconds(3f);
+    //    nextPunch++;
+    //    next = 0;
+    //    ES = EnemyState.Punch;
+    //}
 
 
     public IEnumerator Wait(float delay)
@@ -368,10 +411,10 @@ public class BoxerAIEnemy : MonoBehaviour
                 }
             }
 
-            if (ES == EnemyState.Dodge) {
-                if (Player.moveState == Player.MoveState.Punch)
-                {
-                    StartCoroutine("block");
+            if (ES == EnemyState.Block)
+            {
+                if (!blockStarted) {
+                    StartCoroutine("block", 5f);
                 }
             }
 
