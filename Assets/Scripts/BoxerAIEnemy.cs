@@ -9,6 +9,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
+using static UnityEditor.Experimental.GraphView.GraphView;
 using Debug = UnityEngine.Debug;
 
 public class BoxerAIEnemy : MonoBehaviour
@@ -213,7 +214,7 @@ public class BoxerAIEnemy : MonoBehaviour
                 }
                 if (M == "B")
                 {
-                    ES = EnemyState.Block;
+                    StartCoroutine("blockPhase", 5);
                 }
                 leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
                 rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
@@ -245,7 +246,6 @@ public class BoxerAIEnemy : MonoBehaviour
 
     public IEnumerator dodgePhase(float time)
     {
-
         ES = EnemyState.Dodge;
         Debug.Log($"{time} dodge phase");
         yield return new WaitForSeconds(time);
@@ -255,18 +255,17 @@ public class BoxerAIEnemy : MonoBehaviour
         Debug.Log("Dodge over");
     }
 
-    public IEnumerator block(float sec)
+    public IEnumerator blockPhase(float sec)
     {
-        blockStarted = true;
+        ES = EnemyState.Block;
         GetComponent<Collider>().enabled = false;
-        anim.Play("Block(Start)");
         yield return new WaitForSeconds(sec);
-        anim.Play("Block(End)");
         nextPunch++;
         next = 0;
         ES = EnemyState.Punch;
         GetComponent<Collider>().enabled = true;
-        blockStarted = false;
+        ES = EnemyState.Punch;
+        Debug.Log("Block over");
     }
 
     //public IEnumerator blockPhase()
@@ -413,8 +412,9 @@ public class BoxerAIEnemy : MonoBehaviour
 
             if (ES == EnemyState.Block)
             {
-                if (!blockStarted) {
-                    StartCoroutine("block", 5f);
+                if (Player.moveState == Player.MoveState.Punch) {
+                    //anim.SetTrigger("Block");
+                    anim.Play("Block");
                 }
             }
 
