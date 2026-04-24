@@ -54,7 +54,8 @@ public class BoxerAIEnemy : MonoBehaviour
     {
         Easy,
         Normal,
-        Hard
+        Hard,
+        Practice
     }
 
     //public Animator anim;
@@ -121,6 +122,10 @@ public class BoxerAIEnemy : MonoBehaviour
             case Difficulty.Hard:
                 damage += 5f;
                 atkSpeed = 1.5f;
+                break;
+            case Difficulty.Practice:
+                damage = 1;
+                stamina = 9999;
                 break;
         }
 
