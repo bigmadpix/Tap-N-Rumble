@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -28,4 +30,5 @@ public class PlayerData
 {
     public float maxHP;
     public float currHP;
+    public List<Perk> perks;
 }

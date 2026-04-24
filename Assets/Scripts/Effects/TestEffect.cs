@@ -9,7 +9,7 @@ public class TestEffect : Effect
     
     }
 
-    public override void OnPassive()
+    public override void StartEffect()
     {
         Debug.Log("[Test Effect] is active!");
     }

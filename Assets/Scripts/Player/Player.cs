@@ -1,12 +1,13 @@
-using System.Collections.Generic;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using static BoxerAIEnemy;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
-using System;
 public class Player : MonoBehaviour
 {
     public Transform eyeBox;
@@ -45,13 +46,32 @@ public class Player : MonoBehaviour
     public static Player instance;
     public List<Perk> perks;
 
-
+    public bool perfectDodge, dodge = false;
+    public int dodgeTimer = 0;
+    public GameObject enemyObj;
+    public int combo;
+    public int comboTimer;
+    public float maxHP = 100;
+    public int playerATK = 20;
+    public float playerATKBuff = 0f;
+    public bool isInvincible = false;
+    public bool deathPrevention = false;
+    public bool isDead = false;
+    public float staminaConsumption = 0.1f;
+    public bool isSouthpaw = false;
+    public float guardDamage = 0.25f;
+    //base global damage
+    public float baseDMG = 1f;
+    //vulnurability
+    public float baseVULN = 1f;
     //Events for any script that refrences the player.
     public static event Action OnDodgeSuccess;
+    public static event Action OnPerfectDodge;
     public static event Action OnComboIncrease;
     public static event Action OnPassive;
     public static event Action OnKnockout;
     public static event Action OnPunch;
+    public static event Action OnPunchHit;
     //public static event Action OnHit;
 
     public enum MoveState
@@ -115,16 +135,35 @@ public class Player : MonoBehaviour
         leftFist.GetComponent<Renderer>().material.color = V.GloveColor;
         rightFist.GetComponent<Renderer>().material.color = V.GloveColor;
 
-        OnDodgeSuccess();
-    }
 
+    }
+    public void AddCombo()
+    {
+        combo++;
+        comboTimer += 50;
+        OnComboIncrease();
+    }
     public void LoadData(PlayerData data)
     {
+        maxHP = data.maxHP;
         playerStamina = data.currHP;
+        perks = data.perks;
     }
+    public void AddHP(float amount)
+    {
+
+        playerStamina += amount;
+
+
+    }
+
     public float GetHP()
     {
         return playerStamina;
+    }
+    public float GetMaxHP()
+    {
+        return maxHP;
     }
     public float GetSP()
     {
@@ -138,16 +177,49 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     private void LateUpdate()
     {
-        Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, eyeBox.position, Time.deltaTime * camSpeed);
+        Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, eyeBox.position, Time.unscaledDeltaTime * camSpeed);
         Camera.main.transform.rotation = eyeBox.rotation;
     }
     void Update()
     {
-        if (playerStamina <= 0) {
-            playerStamina = 0;
-            UIManager.instance.GameOver();
+        if (isDead)
+        {
+            anim.speed = 0;
         }
-        _timeSinceLastShake += Time.deltaTime;
+        enemyObj = GameObject.FindGameObjectWithTag("Enemy");
+
+        if (moveState == MoveState.Dodge) {
+
+            if(dodgeTimer <= 10 && enemyObj.GetComponent<BoxerAIEnemy>().ES == EnemyState.Punch && Vector3.Distance(transform.position, enemyObj.transform.position) <= 6f)
+            {
+                Debug.Log(Vector3.Distance(transform.position, enemyObj.transform.position));
+                if (!perfectDodge && Vector3.Distance(transform.position, enemyObj.transform.position) <= 5f)
+                {
+                    perfectDodge = true;
+                    OnPerfectDodge();
+                }
+                else if(!dodge)
+                {
+                    dodge = true;
+                    OnDodgeSuccess();
+                }
+
+            }
+            
+                dodgeTimer++;
+
+        }
+        else
+        {
+            dodgeTimer = 0; 
+            perfectDodge = false;
+        }
+        if (playerStamina <= 0)
+        {
+            Die();
+
+        }
+        _timeSinceLastShake += Time.unscaledDeltaTime;
 
         // Apply low-pass filter to remove gravity
         if (Accelerometer.current != null)
@@ -175,7 +247,7 @@ public class Player : MonoBehaviour
         // Fraction of journey completed equals current distance divided by total distance.
         float fractionOfJourney = distCovered / journeyLength;
 
-        Vector3 target = Vector3.Lerp(transform.position, (standingPos * 5f), Time.deltaTime * speed);
+        Vector3 target = Vector3.Lerp(transform.position, (standingPos * 5f), Time.unscaledDeltaTime * speed);
         transform.position = new Vector3(target.x, transform.position.y, target.z);
         if (Keyboard.current[Key.A].wasPressedThisFrame) {
             StopAllCoroutines();
@@ -199,20 +271,50 @@ public class Player : MonoBehaviour
         }
 
         OnPassive();
+        if (playerStamina > maxHP)
+        {
+            playerStamina = maxHP;
+        }
+        if (playerATKBuff < 0f)
+        {
+            playerATKBuff = 0f;
+        }
     }
-
+    public void OnPunchLand()
+    {
+        OnPunchHit();
+    }
     public void PlayerGotPunched(float p)
     {
  
     }
-
+    public void Die()
+    {
+        OnKnockout();
+        if (!deathPrevention)
+        {
+            playerStamina = 0;
+            isDead = true;
+            UIManager.instance.GameOver();
+        }
+        else
+        {
+            playerStamina = 1;
+            deathPrevention = false;
+        }
+    }
     public void OnHit(float p)
     {
-        playerStamina -= p;
-        UIManager.instance.HitVFX();
+        if (!isInvincible)
+        {
+            playerStamina -= p * baseVULN;
+            UIManager.instance.HitVFX();
+        }
+
     }
     public void OnShake()
     {
+        if (isDead) { return; }
         Debug.Log("Initiating Super Special Move!!");
         var enemy = GameObject.FindGameObjectWithTag("Enemy");
         if (enemy != null) { enemy.GetComponent<BoxerAIEnemy>().GetPunched(playerSP); playerSP = 0; } else
@@ -224,13 +326,15 @@ public class Player : MonoBehaviour
 
     public void OnFingerDown(Finger finger)
     {
-        startPosTouch = finger.screenPosition;
+        if(!isDead)
+            startPosTouch = finger.screenPosition;
         //Debug.Log(finger.screenPosition);
     }
 
     private void OnFingerUp(Finger finger)
     {
-        Vector2 endPos = finger.screenPosition;
+        if (isDead) {return; }
+            Vector2 endPos = finger.screenPosition;
         Vector2 swipeDirection = endPos - startPosTouch;
 
         if (swipeDirection.magnitude >= minSwipeDistance)
@@ -244,13 +348,28 @@ public class Player : MonoBehaviour
                 {
                     Debug.Log("Swiped Right");
                     StopAllCoroutines();
-                    StartCoroutine(DodgeRight());
+                    if (isSouthpaw)
+                    {
+                        StartCoroutine(DodgeLeft());
+                    }
+                    else
+                    {
+                        StartCoroutine(DodgeRight());
+                    }
                 }
                 else
                 {
                     Debug.Log("Swiped Left"); 
                     StopAllCoroutines();
-                    StartCoroutine(DodgeLeft());
+                    if (isSouthpaw)
+                    {
+                        StartCoroutine(DodgeRight());
+                    }
+                    else
+                    {
+                        StartCoroutine(DodgeLeft());
+                    }
+
                     
                 }
             }
@@ -259,13 +378,23 @@ public class Player : MonoBehaviour
                 // Vertical swipe
                 if (swipeDirection.y > 0)
                 {
-                    Debug.Log("Swiped Up");
+                    Debug.Log("Swiped Up"); 
+                    if (isSouthpaw)
+                    {
+                        Debug.Log("Swiped Up");
+                        StopAllCoroutines();
+                        StartCoroutine(DodgeBack());
+                    }
                 }
                 else
                 {
-                    Debug.Log("Swiped Down");
-                    StopAllCoroutines();
-                    StartCoroutine(DodgeBack());
+                    if (!isSouthpaw)
+                    {
+                        Debug.Log("Swiped Down");
+                        StopAllCoroutines();
+                        StartCoroutine(DodgeBack());
+                    }
+
                 }
             }
         }
@@ -311,7 +440,7 @@ public class Player : MonoBehaviour
         speed = 20;
         //rb.AddForce(new Vector3(-10,0,0));
         standingPos = Vector3.forward * 0.5f;
-        yield return new WaitForSeconds(dodgeRecovery * 0.5f);
+        yield return new WaitForSecondsRealtime(dodgeRecovery * 0.5f);
         Return();
 
     }
@@ -319,9 +448,10 @@ public class Player : MonoBehaviour
     {
         moveState = MoveState.Dodge;
         speed = 5;
+        OnDodgeSuccess();
         //rb.AddForce(new Vector3(-10,0,0));
         standingPos = Vector3.right*-1;
-        yield return new WaitForSeconds(dodgeRecovery);
+        yield return new WaitForSecondsRealtime(dodgeRecovery);
         Return();
 
     }
@@ -329,18 +459,20 @@ public class Player : MonoBehaviour
     {
         moveState = MoveState.Dodge;
         speed = 5;
+        OnDodgeSuccess();
         //rb.AddForce(new Vector3(-10,0,0));
         standingPos = Vector3.right; 
-        yield return new WaitForSeconds(dodgeRecovery);
+        yield return new WaitForSecondsRealtime(dodgeRecovery);
         Return();
     }
     public IEnumerator DodgeBack()
     {
         moveState = MoveState.Dodge;
         speed = 5;
+        OnDodgeSuccess();
         //rb.AddForce(new Vector3(-10,0,0));
         standingPos = Vector3.back;
-        yield return new WaitForSeconds(dodgeRecovery);
+        yield return new WaitForSecondsRealtime(dodgeRecovery);
         Return();
     }
 }

@@ -15,9 +15,11 @@ public class UIManager : MonoBehaviour
 
     public GameObject gameOverCanvas;
 
-    public int combo;
-    public int comboTimer;
+
     public TextMeshProUGUI comboTxt;
+
+    public GameObject effects_InputReadingArrowL; 
+    public GameObject effects_InputReadingArrowR;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -34,18 +36,18 @@ public class UIManager : MonoBehaviour
         playerHPTxt.text = "HP: " + player.GetHP();
         playerSPTxt.text = "SP: " + player.GetSP();
 
-        if(comboTimer > 0)
+        if(Player.instance.comboTimer > 0)
         {
-            comboTimer--;
-            if(combo > 1)
+            Player.instance.comboTimer--;
+            if(Player.instance.combo > 1)
             {
-                comboTxt.text = "Combo!: " + combo + "x";
+                comboTxt.text = "Combo!: " + Player.instance.combo + "x";
             }
 
         }
         else
         {
-            combo = 0;
+            Player.instance.combo = 0;
             comboTxt.text = "";
         }
     }
@@ -66,9 +68,5 @@ public class UIManager : MonoBehaviour
         LevelManager.instance.GoMenu();
     }
 
-    public void AddCombo()
-    {
-        combo++;
-        comboTimer += 50;
-    }
+
 }

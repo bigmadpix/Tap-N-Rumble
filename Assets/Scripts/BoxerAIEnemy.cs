@@ -1,16 +1,17 @@
 using JetBrains.Annotations;
 using NUnit.Framework.Constraints;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 using Debug = UnityEngine.Debug;
-
+using Random = UnityEngine.Random;
 public class BoxerAIEnemy : MonoBehaviour
 {
     [SerializeField] private string type;
@@ -39,7 +40,10 @@ public class BoxerAIEnemy : MonoBehaviour
     public bool patternStarted, dodgeStarted;
 
     public float attackSpeed = 1f;
-    
+
+    public bool isPunchL = false;
+    public bool isPunchR = false;
+
     public enum EnemyState
     {
         Default,
@@ -127,6 +131,7 @@ public class BoxerAIEnemy : MonoBehaviour
         Debug.Log("Enemy lost " + p + " stamina.");
         percentDodge -= 0.05f;
         ES = EnemyState.tookDamage;
+        Player.instance.OnPunchLand();
 
     }
 
@@ -212,12 +217,16 @@ public class BoxerAIEnemy : MonoBehaviour
                 anim.SetFloat("Speed",attackSpeed);
                 anim.SetTrigger("PunchL");
                 transform.localScale = new Vector3(1, 1, 1f);
+                isPunchL = true;
+                isPunchR = false;
                 break;
             case "R":
                 rightGlove.GetComponent<EnemyFist>().ColliderOn = true;
                 anim.SetFloat("Speed", attackSpeed);
                 anim.SetTrigger("PunchR");
                 transform.localScale = new Vector3(1, 1, -1f);
+                isPunchL = false;
+                isPunchR = true;
                 break;
             default:
                 break;
@@ -232,6 +241,8 @@ public class BoxerAIEnemy : MonoBehaviour
 
     public IEnumerator attackPattern(string[] ap)
     {
+        isPunchL = false;
+        isPunchR = false;
         yield return new WaitForSeconds(1f);
         anim.enabled = true;
         for (int i = 0; i < ap.Length; i++)
@@ -247,6 +258,8 @@ public class BoxerAIEnemy : MonoBehaviour
                 }
                 if (M == "D")
                 {
+                    isPunchL = false;
+                    isPunchR = false;
                     StartCoroutine("dodgePhase", dodgeTime);
                     yield return new WaitForSeconds(0.2f);
                 }
@@ -259,7 +272,9 @@ public class BoxerAIEnemy : MonoBehaviour
         //    nextPunch++;
         //}
         
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f); 
+        isPunchL = false;
+        isPunchR = false;
         next = 0; 
         patternStarted = false;
         ES = EnemyState.Dodge;
@@ -296,6 +311,7 @@ public class BoxerAIEnemy : MonoBehaviour
 
     public IEnumerator Wait(float delay)
     {
+
         yield return new WaitForSeconds(delay);
 
     }

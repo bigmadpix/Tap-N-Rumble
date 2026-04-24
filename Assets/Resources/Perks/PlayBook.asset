@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5a079e90730f7e468b5d057731722e4, type: 3}
-  m_Name: New Perk
+  m_Name: PlayBook
   m_EditorClassIdentifier: 
-  perkName: 
-  perkDescription: 
-  perkType: 1
-  perkEffect: 
-  eff: {fileID: 11500000, guid: 0b997c27fa4cc2b4e942f3ef854babca, type: 3}
+  perkName: Play Book
+  perkDescription: Test Description
+  perkType: 2
+  image: {fileID: 0}
+  perkEffect: {fileID: 11500000, guid: 3d4b6118043f02645b4e370c9d2177f8, type: 3}

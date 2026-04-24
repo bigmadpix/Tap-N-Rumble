@@ -478,7 +478,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c81bf95fc91a80c44a5ade100d1668a0, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -865,6 +865,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RedLeague_Boxer
       objectReference: {fileID: 0}
+    - target: {fileID: 5438741696640516756, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5959916849546684770, guid: aaba5fd300b20134291cd2e05e666237, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -1249,6 +1253,18 @@ PrefabInstance:
       propertyPath: perks.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5465417078144460768, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
+      propertyPath: 'perks.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 0c4c8ffd58e182e42a87f4e536f6d248, type: 2}
+    - target: {fileID: 5465417078144460768, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
+      propertyPath: 'perks.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 714f3992193cc10498cbd0034afee6af, type: 2}
+    - target: {fileID: 5465417078144460768, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
+      propertyPath: 'perks.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: d28a6559e58bf124a8775164b6646e5c, type: 2}
     - target: {fileID: 5904028241970433468, guid: 50c4b5b8c2c87744f83f13f4f98d5b68, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.5415821

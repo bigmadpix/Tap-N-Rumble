@@ -6,11 +6,13 @@ using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Perk", menuName = "Tap-N-Rumble/Perk")]
+[Serializable]
 public class Perk : ScriptableObject
 {
     public string perkName;
     public string perkDescription;
     public PerkType perkType;
+    public Sprite image;
     public MonoScript perkEffect;
 
     public Effect GetEffect()
@@ -31,7 +33,9 @@ public class Perk : ScriptableObject
 
                 if (perkEffect != null && effectType.Name == perkEffect.GetClass().Name)
                 {
-                    return (Effect)Activator.CreateInstance(effectType);
+                    Effect effectTemp = (Effect)Activator.CreateInstance(effectType);
+                    effectTemp.parentPerk = this;
+                    return effectTemp;
                 }
         
         }
@@ -42,6 +46,7 @@ public class Perk : ScriptableObject
     public enum PerkType
     {
         None,
+        Counter,
         Timing,
         Survival,
         Resource,

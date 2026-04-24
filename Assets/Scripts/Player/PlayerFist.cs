@@ -18,8 +18,9 @@ public class PlayerFist : MonoBehaviour
             {
                 Debug.Log("Enemy Hit");
                 player.AddSP(10);
-                UIManager.instance.AddCombo();
-                other.GetComponent<BoxerAIEnemy>().GetPunched(20f);
+                player.AddCombo();
+
+                other.GetComponent<BoxerAIEnemy>().GetPunched(player.baseDMG*(player.playerATK * (1f + player.playerATKBuff)));
                 isHitboxActive = false;
             }
            

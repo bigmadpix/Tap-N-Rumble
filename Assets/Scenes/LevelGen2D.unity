@@ -273,7 +273,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000091552734}
+  m_AnchoredPosition: {x: 0, y: -0.0002746582}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &572737535
@@ -2347,6 +2347,10 @@ PrefabInstance:
       propertyPath: canvasRoot
       value: 
       objectReference: {fileID: 912866185}
+    - target: {fileID: 8622138089258756008, guid: 0d9dadae5d27d614db1d60cce43b488f, type: 3}
+      propertyPath: totalSpread
+      value: 160
+      objectReference: {fileID: 0}
     - target: {fileID: 8622138089258756008, guid: 0d9dadae5d27d614db1d60cce43b488f, type: 3}
       propertyPath: highlightColor.b
       value: 0.4251958
