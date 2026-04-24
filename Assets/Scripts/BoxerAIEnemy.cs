@@ -14,7 +14,7 @@ using Debug = UnityEngine.Debug;
 
 public class BoxerAIEnemy : MonoBehaviour
 {
-    [SerializeField] private string type, difficulty;
+    [SerializeField] private string type;
     public float stamina, speed, damage, atkSpeed, defSpeed, percentDodge, percentBlock, Points, dodgeTime;
     static int nextPunch = 0, next = 0;
     Vector3 boxerPos, prev;
