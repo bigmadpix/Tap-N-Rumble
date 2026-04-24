@@ -23,10 +23,12 @@ public class EnemyFist : MonoBehaviour
 
             if (ColliderOn) {
 
-                Debug.Log("Player got punched");
-                other.gameObject.GetComponentInParent<Player>().OnHit(damage);
-                ColliderOn = false;
-
+                if (enemy.ES != BoxerAIEnemy.EnemyState.Block)
+                {
+                    Debug.Log("Player got punched");
+                    other.gameObject.GetComponentInParent<Player>().OnHit(damage);
+                    ColliderOn = false;
+                }
                 
             }
         }

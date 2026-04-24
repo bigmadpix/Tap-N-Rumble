@@ -40,7 +40,6 @@ public class BoxerAIEnemy : MonoBehaviour
     public Animator anim;
     public AnimatorOverrideController aoc;
 
-    public bool patternStarted, dodgeStarted;
 
     public float attackSpeed = 1f;
 
@@ -285,6 +284,8 @@ public class BoxerAIEnemy : MonoBehaviour
     {
         ES = EnemyState.Block;
         GetComponent<Collider>().enabled = false;
+        leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
+        rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
         yield return new WaitForSeconds(sec);
         nextPunch++;
         next = 0;
@@ -439,10 +440,11 @@ public class BoxerAIEnemy : MonoBehaviour
 
             if (ES == EnemyState.Block)
             {
-                if (Player.moveState == Player.MoveState.Punch) {
-                    //anim.SetTrigger("Block");
-                    anim.Play("Block");
-                }
+                anim.SetBool("Block", true);
+            }
+            else
+            {
+                anim.SetBool("Block", false);
             }
 
             if (stamina <= 0)
