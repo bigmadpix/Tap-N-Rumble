@@ -10,12 +10,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
+using static UnityEditor.Experimental.GraphView.GraphView;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 public class BoxerAIEnemy : MonoBehaviour
 {
     [SerializeField] private string type;
-    public float stamina, speed, damage, percentDodge, percentBlock, Points, dodgeTime;
+    public float stamina, speed, damage, atkSpeed, defSpeed, percentDodge, percentBlock, Points, dodgeTime;
     static int nextPunch = 0, next = 0;
     Vector3 boxerPos, prev;
     private EnemySpawn Spawn;
@@ -27,6 +28,7 @@ public class BoxerAIEnemy : MonoBehaviour
     [SerializeField] private string[] patterns;
     [SerializeField] private List<string[]> moveList = new List<string[]>();
     [SerializeField] private string textTest;
+    [SerializeField] private float ChargeUp;
 
 
     public GameObject leftGlove, rightGlove;
@@ -34,6 +36,7 @@ public class BoxerAIEnemy : MonoBehaviour
     public Player Player;
     private Rigidbody rb;
     public EnemyState ES;
+    public Difficulty DF;
     public Animator anim;
     public AnimatorOverrideController aoc;
 
@@ -44,23 +47,32 @@ public class BoxerAIEnemy : MonoBehaviour
     public bool isPunchL = false;
     public bool isPunchR = false;
 
+
+    public bool patternStarted, dodgeStarted, blockStarted;
+    
     public enum EnemyState
     {
-        Default,
         Punch,
         Dodge,
         Block,
         tookDamage
     }
 
+    public enum Difficulty
+    {
+        Easy,
+        Normal,
+        Hard,
+        Practice
+    }
+
     //public Animator anim;
     //public AnimatorOverrideController controller;
     private void Awake()
     {
-        int i = Random.Range(0, 3);
-        switch (i){ 
-            case 0:
-                type = "Attack";
+        
+        switch (type){ 
+            case "Attack":
                 stamina = 200;
                 damage = 10;
                 percentDodge = 0.60f;
@@ -70,30 +82,61 @@ public class BoxerAIEnemy : MonoBehaviour
                 patterns = enemyPatterns.text.Split("\n");                
                 Debug.Log("New Enemy: ATTACK");
                 break;
-            case 1:
-                type = "Tank";
+            case "Tank":
                 stamina = 400;
                 damage = 25;
                 percentDodge = 0.20f;
-                dodgeTime = 5f;
+                dodgeTime = 3f;
                 percentBlock = 0.50f;
-                enemyPatterns = Resources.Load<TextAsset>("AttackEnemy Patterns");
+                enemyPatterns = Resources.Load<TextAsset>("TankEnemy Patterns");
                 patterns = enemyPatterns.text.Split("\n");
+                ChargeUp = 0f;
                 Debug.Log("New Enemy: TANK");
                 break;
-            case 2:
-                type = "Quick";
+            case "Quick":
                 stamina = 100;
                 damage = 15;
                 percentDodge = 0.80f;
-                dodgeTime = 7f;
+                dodgeTime = 5f;
                 percentBlock = 0.10f;
-                enemyPatterns = Resources.Load<TextAsset>("AttackEnemy Patterns"); 
+                enemyPatterns = Resources.Load<TextAsset>("QuickEnemy Patterns"); 
                 textTest = enemyPatterns.text;
                 patterns = enemyPatterns.text.Split("\n");
+                ChargeUp = 0f;
                 Debug.Log("New Enemy: QUICK");
                 break;
+            default:
+                stamina = 200;
+                damage = 10;
+                percentDodge = 0.60f;
+                dodgeTime = 3f;
+                percentBlock = 0.40f;
+                enemyPatterns = Resources.Load<TextAsset>("AttackEnemy Patterns");
+                patterns = enemyPatterns.text.Split("\n");
+                Debug.Log("New Enemy: ATTACK");
+                break;
         }
+
+        switch (DF)
+        {
+            case Difficulty.Easy:
+                damage -= 5;
+                atkSpeed = 0.5f;
+                break;
+            case Difficulty.Normal:
+                damage += 0;
+                atkSpeed = 1f;
+                break;
+            case Difficulty.Hard:
+                damage += 5f;
+                atkSpeed = 1.5f;
+                break;
+            case Difficulty.Practice:
+                damage = 1;
+                stamina = 9999;
+                break;
+        }
+
         Points = 500;
         speed = 10f;
         boxerPos = transform.position;
@@ -109,6 +152,7 @@ public class BoxerAIEnemy : MonoBehaviour
 
         patternStarted = false;
         dodgeStarted = false;
+        blockStarted = false;
         //foreach(string pattern in patterns)
         //{
         //    moveList.Add(pattern.Split(","));
@@ -123,8 +167,6 @@ public class BoxerAIEnemy : MonoBehaviour
 
     }
 
-        
-
     public void GetPunched(float p)
     {
         stamina -= p;
@@ -135,81 +177,12 @@ public class BoxerAIEnemy : MonoBehaviour
 
     }
 
-    //public void Punch(float f)
-    //{
-    //    ES = EnemyState.Punch;
-    //    Debug.Log("Enemy makes a punch");
-    //    speed = 20f;
-    //    //boxerPos = Vector3.forward * -0.5f;
-    //    //boxerPos = Vector3.forward * 0.5f;
-
-    //    if (nextPunch % 2 == 0)
-    //    {
-    //        leftGlove.GetComponent<EnemyFist>().ColliderOn = true;
-    //        anim.SetTrigger("PunchL");
-    //        transform.localScale = new Vector3(1, 1, 1f);
-            
-    //    }
-    //    else
-    //    {
-    //        rightGlove.GetComponent<EnemyFist>().ColliderOn = true;
-    //        anim.SetTrigger("PunchR");
-    //        transform.localScale = new Vector3(1, 1, -1f);
-    //    }
-
-    //    //yield return new WaitForSeconds(f);
-    //    ES = EnemyState.Default;
-
-    //    speed = 10f;
-    //    nextPunch++;
-    //}
-
-    //public IEnumerator Punch(string p)
-    //{
-    //    Debug.Log("Enemy makes a punch      " + p);
-    //    speed = 20f;
-    //    //boxerPos = Vector3.forward * -0.5f;
-    //    //boxerPos = Vector3.forward * 0.5f;
-    //    if (anim.GetCurrentAnimatorStateInfo(0).IsName("EnemyPunchL") || anim.GetCurrentAnimatorStateInfo(0).IsName("EnemyPunchR"))
-    //    {
-    //        anim.SetTrigger("Idle");
-    //    }
-
-    //    switch (p)
-    //    {
-    //        case "L":
-    //            leftGlove.GetComponent<EnemyFist>().ColliderOn = true;
-    //            anim.SetTrigger("PunchL");
-    //            transform.localScale = new Vector3(1, 1, 1f);
-    //            break;
-    //        case "R":
-    //            rightGlove.GetComponent<EnemyFist>().ColliderOn = true;
-    //            anim.SetTrigger("PunchR");
-    //            transform.localScale = new Vector3(1, 1, -1f);
-    //            break;
-    //        default:
-    //            break;
-    //    }
-
-    //    yield return new WaitForSeconds(0.5f);
-    //    //ES = EnemyState.Default;
-
-    //    speed = 10f;
-    //}
-
     public void Punch(string p)
     {
-        //ES = EnemyState.Punch;
         Debug.Log("Enemy makes a punch      " + p);
-        speed = 20f;
-        //boxerPos = Vector3.forward * -0.5f;
-        //boxerPos = Vector3.forward * 0.5f;
-        //if (anim.GetCurrentAnimatorStateInfo(0).IsName("EnemyPunchL") || anim.GetCurrentAnimatorStateInfo(0).IsName("EnemyPunchR"))
-        //{
-        //    anim.SetTrigger("Idle");
-        //    return;
-        //}
+        //speed = 20f;
 
+        anim.speed = atkSpeed;
         switch (p)
         {
             case "L":
@@ -231,11 +204,11 @@ public class BoxerAIEnemy : MonoBehaviour
             default:
                 break;
         }
-
+        anim.speed = 1;
         //yield return new WaitForSeconds(0.5f);
         //ES = EnemyState.Default;
 
-        speed = 10f;
+        //speed = 10f;
         //nextPunch++;
     }
 
@@ -263,6 +236,10 @@ public class BoxerAIEnemy : MonoBehaviour
                     StartCoroutine("dodgePhase", dodgeTime);
                     yield return new WaitForSeconds(0.2f);
                 }
+                if (M == "B")
+                {
+                    StartCoroutine("blockPhase", 5);
+                }
                 leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
                 rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
             }
@@ -272,12 +249,12 @@ public class BoxerAIEnemy : MonoBehaviour
         //    nextPunch++;
         //}
         
-        yield return new WaitForSeconds(1f); 
+        yield return new WaitForSeconds(1f);
         isPunchL = false;
         isPunchR = false;
-        next = 0; 
+        next = 0;
+        ChargeUp += 20f;
         patternStarted = false;
-        ES = EnemyState.Dodge;
     }
 
     public IEnumerator dodge(float dir)
@@ -288,12 +265,14 @@ public class BoxerAIEnemy : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         boxerPos += Vector3.left * -dir;
         dodgeStarted = false;
-        //ReturnToDef();
-        //yield return new WaitForSeconds(1);
+        //ChargeUp += 10;
+        
+
     }
 
     public IEnumerator dodgePhase(float time)
     {
+        ES = EnemyState.Dodge;
         Debug.Log($"{time} dodge phase");
         yield return new WaitForSeconds(time);
         nextPunch++;
@@ -302,12 +281,28 @@ public class BoxerAIEnemy : MonoBehaviour
         Debug.Log("Dodge over");
     }
 
-    public IEnumerator block()
+    public IEnumerator blockPhase(float sec)
     {
         ES = EnemyState.Block;
-        yield return new WaitForSeconds(1);
-        ES = EnemyState.Default;
+        GetComponent<Collider>().enabled = false;
+        yield return new WaitForSeconds(sec);
+        nextPunch++;
+        next = 0;
+        ES = EnemyState.Punch;
+        GetComponent<Collider>().enabled = true;
+        ES = EnemyState.Punch;
+        Debug.Log("Block over");
     }
+
+    //public IEnumerator blockPhase()
+    //{
+    //    ES = EnemyState.Block;
+    //    yield return new WaitForSeconds(3f);
+    //    nextPunch++;
+    //    next = 0;
+    //    ES = EnemyState.Punch;
+    //}
+
 
     public IEnumerator Wait(float delay)
     {
@@ -320,11 +315,6 @@ public class BoxerAIEnemy : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         percentDodge = Random.value;
-    }
-
-    public void ReturnToDef()
-    {
-        ES = EnemyState.Default;
     }
 
     public IEnumerator tookDamage()
@@ -346,36 +336,7 @@ public class BoxerAIEnemy : MonoBehaviour
 
         Vector3 target = Vector3.Lerp(transform.position, (boxerPos), Time.deltaTime * speed);
         transform.position = new Vector3(target.x, transform.position.y, target.z);
-
-        string[] curPatt = patterns[nextPunch % (patterns.Length - 1)].Split(',');
-
-        //if (Player != null)
-        //{
-        //    if (ES == EnemyState.Default)
-        //    {
-        //        StopAllCoroutines();
-        //        if (Player.moveState == Player.MoveState.Punch)
-        //        {
-        //            float DG = Random.value;
-        //            if (DG >= percentDodge)
-        //            {
-        //                Debug.Log("Random value: " + DG);
-        //                if(Random.value <= 0.5f)
-        //                    StartCoroutine("dodge", 3f);
-        //                else 
-        //                    StartCoroutine("dodge", -3f);
-        //                //StartCoroutine(changePercent(r));
-        //            }
-        //        }
-        //        else
-        //        {
-        //            float r = Random.Range(0.5f, 3f);
-        //            StartCoroutine("Punch", r);
-        //        }
-        //        leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
-        //        rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
-
-        //    }
+        
         if (Player != null)
         {
             if (ES == EnemyState.tookDamage)
@@ -385,12 +346,54 @@ public class BoxerAIEnemy : MonoBehaviour
 
             if (ES == EnemyState.Punch)
             {
+                //string[] curPatt = new string[1];
                 if (!patternStarted)
                 {
-                    next = 0;
-                    StartCoroutine("attackPattern", curPatt);
-                    patternStarted = true;
+                    switch (type)
+                    {
+                        case "Attack":
+                            string[] curPatt = patterns[nextPunch % (patterns.Length - 1)].Split(',');
+                            next = 0;
+                            StartCoroutine("attackPattern", curPatt);
+                            patternStarted = true;
+                        break;
+                        case "Tank":
+                            if (ChargeUp <= 100f)
+                            {
+                                curPatt = patterns[nextPunch % 6].Split(',');
+                                next = 0;
+                                StartCoroutine("attackPattern", curPatt);
+                                patternStarted = true;
+                            }
+                            else
+                            {
+                                curPatt = patterns[Random.Range(6, 9)].Split(",");
+                                next = 0;
+                                StartCoroutine("attackPattern", curPatt);
+                                patternStarted = true;
+                                ChargeUp = 0;
+                            }
+                        break;
+                        case "Quick":
+                            if (ChargeUp <= 100f)
+                            {
+                                curPatt = patterns[nextPunch % 7].Split(',');
+                                next = 0;
+                                StartCoroutine("attackPattern", curPatt);
+                                patternStarted = true;
+                            }
+                            else
+                            {
+                                curPatt = patterns[Random.Range(7, 11)].Split(",");
+                                next = 0;
+                                StartCoroutine("attackPattern", curPatt);
+                                patternStarted = true;
+                                ChargeUp = 0;
+                            }
+                            break;
+                    }
                 }
+
 
                 //foreach (string patt in curPatt)
                 //{
@@ -433,7 +436,14 @@ public class BoxerAIEnemy : MonoBehaviour
                     }
                 }
             }
-            //}
+
+            if (ES == EnemyState.Block)
+            {
+                if (Player.moveState == Player.MoveState.Punch) {
+                    //anim.SetTrigger("Block");
+                    anim.Play("Block");
+                }
+            }
 
             if (stamina <= 0)
             {
@@ -448,33 +458,33 @@ public class BoxerAIEnemy : MonoBehaviour
                 anim.enabled = false;
             }
 
-            if (Keyboard.current.spaceKey.wasReleasedThisFrame)
-            {
-                anim.enabled = true;
-                StopAllCoroutines();
-                string M = curPatt[next];
-                if (!string.IsNullOrEmpty(M))
-                {
-                    if (M == "L" || M == "R")
-                    {
-                        //StartCoroutine("Punch", patt);
-                        Punch(M);
-                    }
-                    if (M == "D")
-                    {
-                        ES = EnemyState.Dodge;
-                        StartCoroutine("dodgePhase", dodgeTime);
-                        return;
-                    }
-                    leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
-                    rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
-                }
-                //else
-                //{
-                //    nextPunch++;
-                //}
-                next++;
-            }
+            //if (Keyboard.current.spaceKey.wasReleasedThisFrame)
+            //{
+            //    anim.enabled = true;
+            //    StopAllCoroutines();
+            //    string M = curPatt[next];
+            //    if (!string.IsNullOrEmpty(M))
+            //    {
+            //        if (M == "L" || M == "R")
+            //        {
+            //            //StartCoroutine("Punch", patt);
+            //            Punch(M);
+            //        }
+            //        if (M == "D")
+            //        {
+            //            ES = EnemyState.Dodge;
+            //            StartCoroutine("dodgePhase", dodgeTime);
+            //            return;
+            //        }
+            //        leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
+            //        rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
+            //    }
+            //    //else
+            //    //{
+            //    //    nextPunch++;
+            //    //}
+            //    next++;
+            //}
 
             ////LEFT PUNCH TESTING ANIMATIONS
             //if (Keyboard.current.leftArrowKey.wasReleasedThisFrame)
@@ -489,6 +499,34 @@ public class BoxerAIEnemy : MonoBehaviour
             //    anim.SetTrigger("PunchR");
             //    transform.localScale = new Vector3(1,1,-1f);
             //}
+        
+        //if (Player != null)
+        //{
+        //    if (ES == EnemyState.Default)
+        //    {
+        //        StopAllCoroutines();
+        //        if (Player.moveState == Player.MoveState.Punch)
+        //        {
+        //            float DG = Random.value;
+        //            if (DG >= percentDodge)
+        //            {
+        //                Debug.Log("Random value: " + DG);
+        //                if(Random.value <= 0.5f)
+        //                    StartCoroutine("dodge", 3f);
+        //                else 
+        //                    StartCoroutine("dodge", -3f);
+        //                //StartCoroutine(changePercent(r));
+        //            }
+        //        }
+        //        else
+        //        {
+        //            float r = Random.Range(0.5f, 3f);
+        //            StartCoroutine("Punch", r);
+        //        }
+        //        leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
+        //        rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
+
+        //    }
         }
     }
 

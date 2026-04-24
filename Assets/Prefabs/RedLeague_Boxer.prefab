@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 463413689779287428}
   m_Layer: 0
   m_Name: RightGlove
-  m_TagString: Untagged
+  m_TagString: Fist
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -150,6 +150,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ColliderOn: 1
+  damage: 0
+  enemy: {fileID: 0}
 --- !u!1 &5438741696640516756
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,23 +279,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2870b85f2b54924db79dcee667fdfd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
   stamina: 0
   speed: 0
   damage: 0
   percentDodge: 0
+  percentBlock: 0
   Points: 0
+  dodgeTime: 0
   deltaX: 0
   enemyMat: {fileID: 0}
+  enemyPatterns: {fileID: 0}
+  patterns: []
+  textTest: 
+  ChargeUp: 0
   leftGlove: {fileID: 0}
   rightGlove: {fileID: 0}
   lG: {fileID: 717629214850117237}
   rG: {fileID: 2987766516609086611}
   Player: {fileID: 0}
-  anim: {fileID: 6539428654430624465}
-  controller: {fileID: 0}
   ES: 0
-  animator: {fileID: 0}
+  anim: {fileID: 6539428654430624465}
   aoc: {fileID: 0}
+  patternStarted: 0
+  dodgeStarted: 0
 --- !u!54 &6286248845545011379
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -359,7 +368,7 @@ GameObject:
   - component: {fileID: 2494281607399444291}
   m_Layer: 0
   m_Name: LeftGlove
-  m_TagString: Untagged
+  m_TagString: Fist
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -493,3 +502,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ColliderOn: 1
+  damage: 0
+  enemy: {fileID: 0}

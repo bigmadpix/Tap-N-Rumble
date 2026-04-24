@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public Color damageColor;
 
     public static UIManager instance;
+    //public LevelManager LM;
 
     public Player player;
     public TextMeshProUGUI playerHPTxt;
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1;
         instance = this;
+        //LM = gameObject.AddComponent<LevelManager>();
     }
 
     // Update is called once per frame
