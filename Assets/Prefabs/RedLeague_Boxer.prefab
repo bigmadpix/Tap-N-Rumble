@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 3347528880338491510}
   - component: {fileID: 6954170473121087058}
   - component: {fileID: 4385005144819181350}
+  - component: {fileID: 463413689779287428}
   m_Layer: 0
   m_Name: RightGlove
-  m_TagString: Untagged
+  m_TagString: Fist
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -134,8 +135,23 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 10
+  m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &463413689779287428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3833452111472354108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c62029d262b6b0e47bb09861b6b6092e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ColliderOn: 1
+  damage: 0
+  enemy: {fileID: 0}
 --- !u!1 &5438741696640516756
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +166,7 @@ GameObject:
   - component: {fileID: 2707052417686169363}
   - component: {fileID: 5403235427605826270}
   - component: {fileID: 6286248845545011379}
+  - component: {fileID: 6539428654430624465}
   m_Layer: 0
   m_Name: RedLeague_Boxer
   m_TagString: Enemy
@@ -173,7 +190,7 @@ Transform:
   - {fileID: 2987766516609086611}
   - {fileID: 717629214850117237}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &7333929501765909896
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -262,15 +279,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2870b85f2b54924db79dcee667fdfd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
   stamina: 0
   speed: 0
   damage: 0
-  percentKO: 0
+  percentDodge: 0
+  percentBlock: 0
+  Points: 0
+  dodgeTime: 0
+  deltaX: 0
+  enemyMat: {fileID: 0}
+  enemyPatterns: {fileID: 0}
+  patterns: []
+  textTest: 
+  ChargeUp: 0
   leftGlove: {fileID: 0}
   rightGlove: {fileID: 0}
   lG: {fileID: 717629214850117237}
   rG: {fileID: 2987766516609086611}
   Player: {fileID: 0}
+  ES: 0
+  anim: {fileID: 6539428654430624465}
+  aoc: {fileID: 0}
+  patternStarted: 0
+  dodgeStarted: 0
 --- !u!54 &6286248845545011379
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -296,8 +328,30 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 122
   m_CollisionDetection: 0
+--- !u!95 &6539428654430624465
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5438741696640516756}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fb3f1e7da5b09864eb0f3ebd33073d12, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6766247080914568828
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,9 +365,10 @@ GameObject:
   - component: {fileID: 3846425278596454774}
   - component: {fileID: 5959916849546684770}
   - component: {fileID: 8450720315110305185}
+  - component: {fileID: 2494281607399444291}
   m_Layer: 0
-  m_Name: RightGlove (1)
-  m_TagString: Untagged
+  m_Name: LeftGlove
+  m_TagString: Fist
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -434,3 +489,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 10
   m_CollisionDetection: 0
+--- !u!114 &2494281607399444291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6766247080914568828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c62029d262b6b0e47bb09861b6b6092e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ColliderOn: 1
+  damage: 0
+  enemy: {fileID: 0}

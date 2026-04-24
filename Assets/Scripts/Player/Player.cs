@@ -3,6 +3,7 @@ using System.Drawing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
+using static BoxerAIEnemy;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 public class Player : MonoBehaviour
 {
@@ -28,6 +29,17 @@ public class Player : MonoBehaviour
 
     public GameObject leftFist;
     public GameObject rightFist;
+
+    // Sensitivity and timing settings (adjustable in Inspector)
+    public float threshold = 2.0f;
+    public float shakeCooldown = 0.5f;
+
+    private Vector3 _lowPassValue;
+    private float _timeSinceLastShake = 0;
+
+    [SerializeField] private float playerStamina = 100;
+    private float playerSP = 0;
+
     public enum MoveState
     {
         Neutral, 
@@ -39,17 +51,30 @@ public class Player : MonoBehaviour
     public MoveState moveState = MoveState.Neutral;
     private Vector3 startPos; Vector3 prev;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void OnEnable()
+    {
+        if (Accelerometer.current != null)
+        {
+            InputSystem.EnableDevice(Accelerometer.current);
+        }
+    }
     private void Awake()
     {
         EnhancedTouchSupport.Enable();
         Touch.onFingerDown += OnFingerDown; 
         Touch.onFingerUp += OnFingerUp;
+        playerStamina = 100f;
     }
     void OnDisable()
     {
         Touch.onFingerDown -= OnFingerDown;
         Touch.onFingerUp -= OnFingerUp;
         EnhancedTouchSupport.Disable();
+
+        if (Accelerometer.current != null)
+        {
+            InputSystem.DisableDevice(Accelerometer.current);
+        }
     }
     void Start()
     {
@@ -60,12 +85,30 @@ public class Player : MonoBehaviour
         // Calculate the journey length.
         journeyLength = Vector3.Distance(eyeBox.position, standingPos * 5f);
         anim.runtimeAnimatorController = controller;
+        if (Accelerometer.current != null)
+        {
+            // Start the Accelerometer
+            _lowPassValue = Accelerometer.current.acceleration.ReadValue();
+        }
 
         //Changes the color of the gloves on the player 
         leftFist.GetComponent<Renderer>().material.color = V.GloveColor;
         rightFist.GetComponent<Renderer>().material.color = V.GloveColor;
     }
 
+    public float GetHP()
+    {
+        return playerStamina;
+    }
+    public float GetSP()
+    {
+        return playerSP;
+    }
+
+    public void AddSP(float sp)
+    {
+        playerSP += sp;
+    }
     // Update is called once per frame
     private void LateUpdate()
     {
@@ -74,6 +117,27 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        if (playerStamina <= 0) {
+            playerStamina = 0;
+            UIManager.instance.GameOver();
+        }
+        _timeSinceLastShake += Time.deltaTime;
+
+        // Apply low-pass filter to remove gravity
+        if (Accelerometer.current != null)
+        {
+            _lowPassValue = Vector3.Lerp(_lowPassValue, Accelerometer.current.acceleration.ReadValue(), 0.1f);
+            Vector3 deltaAcceleration = Accelerometer.current.acceleration.ReadValue() - _lowPassValue;
+
+            // Check for sharp movement exceeding the threshold
+            if (deltaAcceleration.sqrMagnitude >= threshold && _timeSinceLastShake >= shakeCooldown)
+            {
+                Debug.Log("Shake detected!");
+                // Trigger action (e.g., Handheld.Vibrate())
+                _timeSinceLastShake = 0;
+                OnShake();
+            }
+        }
         Vector3 deltaPos = transform.position - prev;
         deltaX = deltaPos.x;
 
@@ -108,13 +172,34 @@ public class Player : MonoBehaviour
 
         }
     }
+
+    public void PlayerGotPunched(float p)
+    {
+ 
+    }
+
+    public void OnHit(float p)
+    {
+        playerStamina -= p;
+        UIManager.instance.HitVFX();
+    }
+    public void OnShake()
+    {
+        Debug.Log("Initiating Super Special Move!!");
+        var enemy = GameObject.FindGameObjectWithTag("Enemy");
+        if (enemy != null) { enemy.GetComponent<BoxerAIEnemy>().GetPunched(playerSP); playerSP = 0; } else
+        {
+            Debug.Log("Attack Missed. No Enemy Found");
+        }
+        
+    }
+
     public void OnFingerDown(Finger finger)
     {
         startPosTouch = finger.screenPosition;
         //Debug.Log(finger.screenPosition);
-        
-
     }
+
     private void OnFingerUp(Finger finger)
     {
         Vector2 endPos = finger.screenPosition;
@@ -159,7 +244,7 @@ public class Player : MonoBehaviour
         else
         {
             Debug.Log("Tapped."); 
-            if (finger.screenPosition.x > 999)
+            if (finger.screenPosition.x > Screen.width/2)
             {
                 rightFist.GetComponent<PlayerFist>().isHitboxActive = true;
                 Debug.Log("Punch Right");
@@ -168,7 +253,7 @@ public class Player : MonoBehaviour
                 //overrideController["Idle"] = newRunClip;
                 anim.SetTrigger("PunchR");
             }
-            else if (finger.screenPosition.x < 999)
+            else if (finger.screenPosition.x < Screen.width / 2)
             {
                 Debug.Log("Punch Left");
                 leftFist.GetComponent<PlayerFist>().isHitboxActive = true;
