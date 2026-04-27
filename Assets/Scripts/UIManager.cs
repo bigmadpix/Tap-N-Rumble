@@ -15,9 +15,11 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI playerSPTxt;
 
     public GameObject gameOverCanvas;
+    BoxerAIEnemy BoxerAIEnemy;
 
 
     public TextMeshProUGUI comboTxt;
+    public TextMeshProUGUI SuperAttack;
 
     public GameObject effects_InputReadingArrowL; 
     public GameObject effects_InputReadingArrowR;
@@ -27,6 +29,7 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 1;
         instance = this;
         //LM = gameObject.AddComponent<LevelManager>();
+        BoxerAIEnemy = FindFirstObjectByType<BoxerAIEnemy>();
     }
 
     // Update is called once per frame
@@ -45,12 +48,21 @@ public class UIManager : MonoBehaviour
             {
                 comboTxt.text = "Combo!: " + Player.instance.combo + "x";
             }
-
+            
         }
         else
         {
             Player.instance.combo = 0;
             comboTxt.text = "";
+        }
+
+        if (BoxerAIEnemy.superAttack)
+        {
+            SuperAttack.enabled = true;
+        }
+        else
+        {
+            SuperAttack.enabled = false;
         }
     }
 

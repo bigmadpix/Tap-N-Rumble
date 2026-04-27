@@ -388,12 +388,12 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    if (!isSouthpaw)
-                    {
-                        Debug.Log("Swiped Down");
-                        StopAllCoroutines();
-                        StartCoroutine(DodgeBack());
-                    }
+                    //if (!isSouthpaw)
+                    //{
+                    //    Debug.Log("Swiped Down");
+                    //    StopAllCoroutines();
+                    //    StartCoroutine(DodgeBack());
+                    //}
 
                 }
             }

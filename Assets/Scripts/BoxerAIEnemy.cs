@@ -29,6 +29,7 @@ public class BoxerAIEnemy : MonoBehaviour
     [SerializeField] private List<string[]> moveList = new List<string[]>();
     [SerializeField] private string textTest;
     [SerializeField] private float ChargeUp;
+    [SerializeField] private string[] curPatt;
 
 
     public GameObject leftGlove, rightGlove;
@@ -38,6 +39,7 @@ public class BoxerAIEnemy : MonoBehaviour
     public EnemyState ES;
     public Difficulty DF;
     public Animator anim;
+    public AnimationClip PunchAnim;
     public AnimatorOverrideController aoc;
 
 
@@ -47,7 +49,7 @@ public class BoxerAIEnemy : MonoBehaviour
     public bool isPunchR = false;
 
 
-    public bool patternStarted, dodgeStarted, blockStarted;
+    public bool patternStarted, dodgeStarted, blockStarted, superAttack;
     
     public enum EnemyState
     {
@@ -89,7 +91,6 @@ public class BoxerAIEnemy : MonoBehaviour
                 percentBlock = 0.50f;
                 enemyPatterns = Resources.Load<TextAsset>("TankEnemy Patterns");
                 patterns = enemyPatterns.text.Split("\n");
-                ChargeUp = 0f;
                 Debug.Log("New Enemy: TANK");
                 break;
             case "Quick":
@@ -101,7 +102,6 @@ public class BoxerAIEnemy : MonoBehaviour
                 enemyPatterns = Resources.Load<TextAsset>("QuickEnemy Patterns"); 
                 textTest = enemyPatterns.text;
                 patterns = enemyPatterns.text.Split("\n");
-                ChargeUp = 0f;
                 Debug.Log("New Enemy: QUICK");
                 break;
             default:
@@ -136,6 +136,7 @@ public class BoxerAIEnemy : MonoBehaviour
                 break;
         }
 
+        ChargeUp = 0;
         Points = 500;
         speed = 10f;
         boxerPos = transform.position;
@@ -152,6 +153,7 @@ public class BoxerAIEnemy : MonoBehaviour
         patternStarted = false;
         dodgeStarted = false;
         blockStarted = false;
+        superAttack = false;
         //foreach(string pattern in patterns)
         //{
         //    moveList.Add(pattern.Split(","));
@@ -226,7 +228,7 @@ public class BoxerAIEnemy : MonoBehaviour
                 {
                     //StartCoroutine("Punch", patt);
                     Punch(M);
-                    yield return new WaitForSeconds(0.5f * (1+(1-attackSpeed)));
+                    yield return new WaitForSeconds((1 + (1 - attackSpeed)));
                 }
                 if (M == "D")
                 {
@@ -239,15 +241,19 @@ public class BoxerAIEnemy : MonoBehaviour
                 {
                     StartCoroutine("blockPhase", 5);
                 }
-                leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
-                rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
+                //leftGlove.GetComponent<EnemyFist>().ColliderOn = false;
+                //rightGlove.GetComponent<EnemyFist>().ColliderOn = false;
             }
         }
         //else
         //{
         //    nextPunch++;
         //}
-        
+        if (superAttack)
+        {
+            superAttack = false;
+            attackSpeed -= 0.25f;
+        }
         yield return new WaitForSeconds(1f);
         isPunchL = false;
         isPunchR = false;
@@ -292,6 +298,8 @@ public class BoxerAIEnemy : MonoBehaviour
         ES = EnemyState.Punch;
         GetComponent<Collider>().enabled = true;
         ES = EnemyState.Punch;
+        leftGlove.GetComponent<EnemyFist>().ColliderOn = true;
+        rightGlove.GetComponent<EnemyFist>().ColliderOn = true;
         Debug.Log("Block over");
     }
 
@@ -348,12 +356,17 @@ public class BoxerAIEnemy : MonoBehaviour
             if (ES == EnemyState.Punch)
             {
                 //string[] curPatt = new string[1];
+                if (type != "Attack" && ChargeUp > 100)
+                {
+                    superAttack = true;
+                }
+
                 if (!patternStarted)
                 {
                     switch (type)
                     {
                         case "Attack":
-                            string[] curPatt = patterns[nextPunch % (patterns.Length - 1)].Split(',');
+                            curPatt = patterns[nextPunch % (patterns.Length - 1)].Split(',');
                             next = 0;
                             StartCoroutine("attackPattern", curPatt);
                             patternStarted = true;
@@ -370,6 +383,7 @@ public class BoxerAIEnemy : MonoBehaviour
                             {
                                 curPatt = patterns[Random.Range(6, 9)].Split(",");
                                 next = 0;
+                                attackSpeed += 0.25f;
                                 StartCoroutine("attackPattern", curPatt);
                                 patternStarted = true;
                                 ChargeUp = 0;

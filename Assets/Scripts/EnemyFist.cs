@@ -10,7 +10,7 @@ public class EnemyFist : MonoBehaviour
     private void Awake()
     {
         enemy = GetComponentInParent<BoxerAIEnemy>();
-
+        GetComponent<Collider>().enabled = ColliderOn;
     }
     private void Update()
     {
