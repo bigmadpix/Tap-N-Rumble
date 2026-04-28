@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: BrassKnuckles
   m_EditorClassIdentifier: 
   perkName: Brass Knuckles
-  perkDescription: Test Description
+  perkDescription: A metal weapon meant for hitting harder, it's been smuggled in
+    somehow.
   perkType: 1
   image: {fileID: 0}
   perkEffect: {fileID: 11500000, guid: e898f1fd2fa72d84491c601e79580bed, type: 3}
+  perkCost: 60

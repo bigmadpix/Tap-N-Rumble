@@ -315,6 +315,7 @@ public class Player : MonoBehaviour
     public void OnShake()
     {
         if (isDead) { return; }
+        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 0) { TutorialManager.Instance.tutorialStep++; }
         Debug.Log("Initiating Super Special Move!!");
         var enemy = GameObject.FindGameObjectWithTag("Enemy");
         if (enemy != null) { enemy.GetComponent<BoxerAIEnemy>().GetPunched(playerSP); playerSP = 0; } else
@@ -435,6 +436,7 @@ public class Player : MonoBehaviour
     }
     public IEnumerator Punch()
     {
+        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 1) { TutorialManager.Instance.tutorialStep++; }
         moveState = MoveState.Punch;
 
         speed = 20;
@@ -446,6 +448,7 @@ public class Player : MonoBehaviour
     }
     public IEnumerator DodgeLeft()
     {
+        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 0) { TutorialManager.Instance.tutorialStep++; }
         moveState = MoveState.Dodge;
         speed = 5;
         OnDodgeSuccess();
@@ -457,6 +460,7 @@ public class Player : MonoBehaviour
     }
     public IEnumerator DodgeRight()
     {
+        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 0) { TutorialManager.Instance.tutorialStep++; }
         moveState = MoveState.Dodge;
         speed = 5;
         OnDodgeSuccess();
@@ -467,6 +471,7 @@ public class Player : MonoBehaviour
     }
     public IEnumerator DodgeBack()
     {
+        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 0) { TutorialManager.Instance.tutorialStep++; }
         moveState = MoveState.Dodge;
         speed = 5;
         OnDodgeSuccess();

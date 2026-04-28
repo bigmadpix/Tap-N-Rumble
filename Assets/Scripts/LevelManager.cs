@@ -7,6 +7,9 @@ public class LevelManager : MonoBehaviour
     public static LevelManager instance;
     public LevelNode currentNode;
     public GameObject winCanvas;
+
+    public BoxerAIEnemy.Difficulty baseDifficulty;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

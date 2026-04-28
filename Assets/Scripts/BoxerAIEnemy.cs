@@ -30,7 +30,11 @@ public class BoxerAIEnemy : MonoBehaviour
     [SerializeField] private string textTest;
     [SerializeField] private float ChargeUp;
 
-
+    public Color tutorialLeague;
+    public Color redLeague;
+    public Color blueLeague;
+    public Color yellowLeague;
+    public GameObject glove_modelL, glove_modelR;
     public GameObject leftGlove, rightGlove;
     [SerializeField] private Transform lG, rG;
     public Player Player;
@@ -39,13 +43,13 @@ public class BoxerAIEnemy : MonoBehaviour
     public Difficulty DF;
     public Animator anim;
     public AnimatorOverrideController aoc;
-
-
+    public bool trainingWheels = false;
+    private bool tutorialFinish = false;
     public float attackSpeed = 1f;
 
     public bool isPunchL = false;
     public bool isPunchR = false;
-
+    public bool isDead = false;
 
     public bool patternStarted, dodgeStarted, blockStarted;
     
@@ -69,8 +73,58 @@ public class BoxerAIEnemy : MonoBehaviour
     //public AnimatorOverrideController controller;
     private void Awake()
     {
-        
-        switch (type){ 
+        if(LevelManager.instance.currentNode.nodeType == LevelNode.NodeType.Combat)
+        {
+            type = "Attack";
+            DF = LevelManager.instance.baseDifficulty;
+        }
+        if (LevelManager.instance.currentNode.nodeType == LevelNode.NodeType.Elite)
+        {
+            int rng = Random.Range(0, 2);
+
+            if(rng == 0)
+                type = "Tank";
+
+            if (rng == 1)
+                type = "Quick";
+
+            if(LevelManager.instance.baseDifficulty != Difficulty.Hard)
+            {
+                DF = LevelManager.instance.baseDifficulty + 1;
+            }
+            else
+            {
+                DF = LevelManager.instance.baseDifficulty;
+            }
+
+        }
+        if (LevelManager.instance.currentNode.nodeType == LevelNode.NodeType.Boss)
+        {
+                type = "Boss";
+            if (LevelManager.instance.baseDifficulty != Difficulty.Hard)
+            {
+                DF = LevelManager.instance.baseDifficulty + 1;
+            }
+            else
+            {
+                DF = LevelManager.instance.baseDifficulty;
+            }
+
+        }
+
+
+        switch (type)
+        {
+            case "Boss":
+                stamina = 350;
+                damage = 25;
+                percentDodge = 0.75f;
+                dodgeTime = 4f;
+                percentBlock = 0.35f;
+                enemyPatterns = Resources.Load<TextAsset>("AttackEnemy Patterns");
+                patterns = enemyPatterns.text.Split("\n");
+                Debug.Log("New Enemy: BOSS");
+                break;
             case "Attack":
                 stamina = 200;
                 damage = 10;
@@ -121,18 +175,27 @@ public class BoxerAIEnemy : MonoBehaviour
             case Difficulty.Easy:
                 damage -= 5;
                 atkSpeed = 0.5f;
+                glove_modelL.gameObject.GetComponent<Renderer>().material.color = redLeague;
+                glove_modelR.gameObject.GetComponent<Renderer>().material.color = redLeague;
                 break;
             case Difficulty.Normal:
                 damage += 0;
                 atkSpeed = 1f;
+                glove_modelL.gameObject.GetComponent<Renderer>().material.color = blueLeague;
+                glove_modelR.gameObject.GetComponent<Renderer>().material.color = blueLeague;
                 break;
             case Difficulty.Hard:
                 damage += 5f;
                 atkSpeed = 1.5f;
+                glove_modelL.gameObject.GetComponent<Renderer>().material.color = yellowLeague;
+                glove_modelR.gameObject.GetComponent<Renderer>().material.color = yellowLeague;
                 break;
             case Difficulty.Practice:
-                damage = 1;
+                damage = 0;
                 stamina = 9999;
+                trainingWheels = true;
+                glove_modelL.gameObject.GetComponent<Renderer>().material.color = tutorialLeague;
+                glove_modelR.gameObject.GetComponent<Renderer>().material.color = tutorialLeague;
                 break;
         }
 
@@ -255,7 +318,11 @@ public class BoxerAIEnemy : MonoBehaviour
         ChargeUp += 20f;
         patternStarted = false;
     }
+    private void Start()
+    {
 
+
+        }
     public IEnumerator dodge(float dir)
     {
         Debug.Log("Enemy Dodged");
@@ -330,6 +397,14 @@ public class BoxerAIEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (DF == Difficulty.Practice && TutorialManager.Instance != null)
+        {
+            TutorialManager.Instance.isActive = true;
+
+
+        }
+        if (DF == Difficulty.Practice && trainingWheels == false && tutorialFinish == false) { stamina = 50; tutorialFinish = true; }
+        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 4) { trainingWheels = false; }
         Vector3 deltaPos = transform.position - prev;
         deltaX = deltaPos.x;
 
@@ -352,8 +427,14 @@ public class BoxerAIEnemy : MonoBehaviour
                 {
                     switch (type)
                     {
-                        case "Attack":
+                        case "Boss":
                             string[] curPatt = patterns[nextPunch % (patterns.Length - 1)].Split(',');
+                            next = 0;
+                            StartCoroutine("attackPattern", curPatt);
+                            patternStarted = true;
+                            break;
+                        case "Attack":
+                            curPatt = patterns[nextPunch % (patterns.Length - 1)].Split(',');
                             next = 0;
                             StartCoroutine("attackPattern", curPatt);
                             patternStarted = true;
@@ -446,13 +527,40 @@ public class BoxerAIEnemy : MonoBehaviour
             {
                 anim.SetBool("Block", false);
             }
-
             if (stamina <= 0)
             {
                 anim.enabled = false;
                 rb.useGravity = true;
+            }
+            if (stamina <= 0 && isDead == false)
+            {
+
+
+                int reward = 0;
+
+                switch (DF)
+                {
+                    case Difficulty.Easy:
+                        reward = 20;
+                        break;
+                    case Difficulty.Normal:
+                        reward = 40;
+                        break;
+                    case Difficulty.Hard:
+                        reward = 80;
+                        break;
+                    case Difficulty.Practice:
+                        reward = 0;
+                        break;
+
+                }
+
+                GameManager.instance.playerDat.dollers += reward;
+
+
                 Spawn.SendMessage("AddPoints", Points);
                 Destroy(this.gameObject, 2);
+                isDead = true;
             }
 
             if (dodgeStarted)

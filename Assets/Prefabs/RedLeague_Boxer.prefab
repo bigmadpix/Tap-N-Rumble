@@ -296,6 +296,12 @@ MonoBehaviour:
   patterns: []
   textTest: 
   ChargeUp: 0
+  tutorialLeague: {r: 1, g: 1, b: 1, a: 0}
+  redLeague: {r: 0.6415094, g: 0.20879316, b: 0.20879316, a: 0}
+  blueLeague: {r: 0.21680315, g: 0.39102942, b: 0.5283019, a: 0}
+  yellowLeague: {r: 0.735849, g: 0.6242197, b: 0.36445352, a: 0}
+  glove_modelL: {fileID: 2344486636060507203}
+  glove_modelR: {fileID: 44240917416907145}
   leftGlove: {fileID: 0}
   rightGlove: {fileID: 0}
   lG: {fileID: 717629214850117237}
@@ -308,6 +314,7 @@ MonoBehaviour:
   attackSpeed: 1
   isPunchL: 0
   isPunchR: 0
+  isDead: 0
   patternStarted: 0
   dodgeStarted: 0
   blockStarted: 0
@@ -606,6 +613,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43e9c1641d2891d48af6aa0a0c9032cf, type: 3}
+--- !u!1 &44240917416907145 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8391222552659086748, guid: 43e9c1641d2891d48af6aa0a0c9032cf, type: 3}
+  m_PrefabInstance: {fileID: 797505939710026733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &908590299433092102 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 43e9c1641d2891d48af6aa0a0c9032cf, type: 3}
@@ -704,6 +716,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43e9c1641d2891d48af6aa0a0c9032cf, type: 3}
+--- !u!1 &2344486636060507203 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8391222552659086748, guid: 43e9c1641d2891d48af6aa0a0c9032cf, type: 3}
+  m_PrefabInstance: {fileID: 3099929687943237159}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3210944342364924364 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 43e9c1641d2891d48af6aa0a0c9032cf, type: 3}

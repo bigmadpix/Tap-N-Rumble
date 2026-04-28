@@ -7,12 +7,14 @@ public class InputReading : Effect
     
         effectName = "Input Reading";
         effectDescription = "Read your opponent. Chance for arrows to tell you where to dodge before an enemy attack.";
-        StartEffect();
     }
     public override void OnPassive()
     {
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<BoxerAIEnemy>();
-
+        if (!isActive)
+        {
+            StartEffect();
+        }
         if (isActive)
         {
 

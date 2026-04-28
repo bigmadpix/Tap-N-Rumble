@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Spectacles
   m_EditorClassIdentifier: 
   perkName: Spectacles
-  perkDescription: Test Description
+  perkDescription: These help you see more clearly, because seeing is important when
+    it comes to vision.
   perkType: 2
   image: {fileID: 0}
   perkEffect: {fileID: 11500000, guid: e3d74c332d2e9b74aa861bb507a228a9, type: 3}
+  perkCost: 250

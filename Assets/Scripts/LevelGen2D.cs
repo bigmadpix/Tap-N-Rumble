@@ -26,7 +26,8 @@ public class LevelGen2D : MonoBehaviour
     public Color activeColor = Color.cyan;
     public Color defaultColor = Color.white;
 
-    public GameObject currentNode;
+    public GameObject currentNode; 
+    private GameObject finalShop;
     private GameObject finalNode;
     private List<GameObject> leafNodes = new List<GameObject>();
 
@@ -44,15 +45,15 @@ public class LevelGen2D : MonoBehaviour
         GenerateNode(new Vector2(0, -400), 0f, totalSpread, 0, canvasRoot.gameObject);
 
         //Create the last target (boss)
+        CreateFinalShop();
         CreateFinalTarget();
-
 
         // Select the Root to start the level
         // The root is the second from last child of the canvasRoot ig
         if (canvasRoot.childCount > 0)
-            SelectNode(canvasRoot.GetChild(canvasRoot.childCount-2).gameObject);
+            SelectNode(canvasRoot.GetChild(canvasRoot.childCount-3).gameObject);
 
-        canvasRoot.GetChild(canvasRoot.childCount - 2).gameObject.GetComponent<LevelNode>().nodeType = LevelNode.NodeType.Start;
+        canvasRoot.GetChild(canvasRoot.childCount - 3).gameObject.GetComponent<LevelNode>().nodeType = LevelNode.NodeType.Start;
     }
 
     private void Update()
@@ -135,24 +136,39 @@ public class LevelGen2D : MonoBehaviour
             GenerateNode(dir * branchLength, childAngle, availableSpread / numChildren, depth + 1, instance);
         }
     }
+    void CreateFinalShop()
+    {
+        // Place the final node at the very top center
+        finalShop = Instantiate(nodePrefab, canvasRoot);
+        finalShop.name = "FINAL_SHOP";
+        finalShop.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 282 * maxDepth);
+        finalShop.GetComponent<Image>().color = Color.yellow; // Make it special
+
+        finalShop.GetComponent<LevelNode>().nodeType = LevelNode.NodeType.Shop;
+
+        Button btn = finalShop.GetComponent<Button>();
+        btn.onClick.AddListener(() => OnNodeClicked(finalShop));
+
+        // Connect all leaf nodes to this one final target
+        foreach (GameObject leaf in leafNodes)
+        {
+            DrawLine(finalShop, leaf);
+        }
+    }
     void CreateFinalTarget()
     {
         // Place the final node at the very top center
         finalNode = Instantiate(nodePrefab, canvasRoot);
         finalNode.name = "FINAL_GOAL";
-        finalNode.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 450);
-        finalNode.GetComponent<Image>().color = Color.yellow; // Make it special
+        finalNode.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 282*(maxDepth+1));
+        finalNode.GetComponent<Image>().color = Color.red; // Make it special
 
         finalNode.GetComponent<LevelNode>().nodeType = LevelNode.NodeType.Boss;
 
         Button btn = finalNode.GetComponent<Button>();
         btn.onClick.AddListener(() => OnNodeClicked(finalNode));
+        DrawLine(finalNode, finalShop);
 
-        // Connect all leaf nodes to this one final target
-        foreach (GameObject leaf in leafNodes)
-        {
-            DrawLine(finalNode, leaf);
-        }
     }
     public void OnNodeClicked(GameObject clickedNode)
     {
@@ -160,9 +176,9 @@ public class LevelGen2D : MonoBehaviour
         // Is the clicked node's parent the one we are currently standing on?
 
         bool isChild = clickedNode.transform.parent == currentNode.transform;
-        bool isFinalGoal = (clickedNode == finalNode && leafNodes.Contains(currentNode));
-
-        if (isChild || isFinalGoal)
+        bool isFinalGoal = (clickedNode == finalNode && currentNode == finalShop);
+        bool isFinalShop = (clickedNode == finalShop && leafNodes.Contains(currentNode));
+        if (isChild || isFinalGoal || isFinalShop)
         {
             SelectNode(clickedNode);
             clickedNode.GetComponent<LevelNode>().OnNodeEnter();

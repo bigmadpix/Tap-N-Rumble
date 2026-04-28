@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Steroids
   m_EditorClassIdentifier: 
   perkName: Steroids
-  perkDescription: Test Description
+  perkDescription: Drugs that may or may not have positive/negative effects on the
+    human body depending on the circumstances.
   perkType: 4
   image: {fileID: 0}
   perkEffect: {fileID: 11500000, guid: f69196f5a93d5ba45aad232a0f102107, type: 3}
+  perkCost: 75

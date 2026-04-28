@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Noisemaker
   m_EditorClassIdentifier: 
   perkName: Noisemaker
-  perkDescription: Test Description
+  perkDescription: A loud clacking device that makes everyone in a 50m radius hate
+    you.
   perkType: 5
   image: {fileID: 0}
   perkEffect: {fileID: 11500000, guid: 0f7aa62772c863848998dbd57ff9bb96, type: 3}
+  perkCost: 15

@@ -30,5 +30,6 @@ public class PlayerData
 {
     public float maxHP;
     public float currHP;
+    public int dollers = 0;
     public List<Perk> perks;
 }
