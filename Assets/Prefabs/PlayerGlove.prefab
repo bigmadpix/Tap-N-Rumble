@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2972041956970201950}
   - component: {fileID: 1945182436707132102}
   - component: {fileID: 2027709860423135606}
+  - component: {fileID: 1157098789266959070}
   m_Layer: 0
   m_Name: PlayerGlove
   m_TagString: Untagged
@@ -86,3 +87,15 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1157098789266959070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8278972095933141565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52434348104cd744bb39f7397a84709f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

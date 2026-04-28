@@ -3,21 +3,38 @@ using TMPro;
 
 public class ShopCode : MonoBehaviour
 {
-    int Tracker = 1;
+    public int Tracker = 1;
     public GameObject[] Gloves = new GameObject[2];
     public int GP; 
     public TextMeshProUGUI GPText;
-
+    public TextMeshProUGUI buyOrEquip;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         SetColor();
+        Tracker = V.currEquipped;
     }
 
     // Update is called once per frame
     void Update()
     {
         GPText.text = "GP: " + GP;
+        if(V.Purchased[Tracker-1] == true)
+        {
+            if (V.currEquipped == Tracker)
+            {
+                buyOrEquip.text = "Equipped";
+            }
+            else
+            {
+                buyOrEquip.text = "Equip";
+            }
+
+        }
+        else
+        {
+            buyOrEquip.text = "Buy";
+        }
     }
 
     public void ColorTracker(int num)
@@ -36,52 +53,27 @@ public class ShopCode : MonoBehaviour
             case 1:
                 foreach (GameObject gloves in Gloves) { 
                     gloves.GetComponent<Renderer>().material.color = Color.grey;
-                    if (V.Purchased[Tracker -1] == false)
-                    {
-                        V.Purchased[Tracker - 1] = true;
-                        removeGP();
-                    }
 
                 }
                 break;
             case 2:
                 foreach (GameObject gloves in Gloves) { 
                     gloves.GetComponent<Renderer>().material.color = Color.red;
-                    if (V.Purchased[Tracker - 1] == false)
-                    {
-                        V.Purchased[Tracker - 1] = true;
-                        removeGP();
-                    }
                 }
                 break;
             case 3:
                 foreach (GameObject gloves in Gloves) {
                     gloves.GetComponent<Renderer>().material.color = Color.blue;
-                    if (V.Purchased[Tracker - 1] == false)
-                    {
-                        V.Purchased[Tracker - 1] = true;
-                        removeGP();
-                    }
                 }
                 break;
             case 4:
                 foreach (GameObject gloves in Gloves) {
                     gloves.GetComponent<Renderer>().material.color = Color.yellow;
-                    if (V.Purchased[Tracker - 1] == false)
-                    {
-                        V.Purchased[Tracker - 1] = true;
-                        removeGP();
-                    }
                 }
                 break;
             case 5:
                 foreach (GameObject gloves in Gloves) { 
                     gloves.GetComponent<Renderer>().material.color = Color.green;
-                    if (V.Purchased[Tracker - 1] == false)
-                    {
-                        V.Purchased[Tracker - 1] = true;
-                        removeGP();
-                    }
                 }
                 break;
 
@@ -93,28 +85,81 @@ public class ShopCode : MonoBehaviour
     {
         switch (Tracker)
         {
-            case 0:
-                V.GloveColor = Color.grey;
-                break;
             case 1:
-                V.GloveColor = Color.red;
+                if(V.Purchased[Tracker -1] == true)
+                {
+                    V.GloveColor = Color.grey;
+                    V.currEquipped = Tracker;
+                }
+                else
+                {
+                    Purchase();
+                }
+
+
                 break;
             case 2:
-                V.GloveColor = Color.blue;
+                if (V.Purchased[Tracker - 1] == true)
+                {
+                    V.GloveColor = Color.red;
+                    V.currEquipped = Tracker;
+                }
+                else
+                {
+                    Purchase();
+                }
                 break;
             case 3:
-                V.GloveColor = Color.yellow;
+                if (V.Purchased[Tracker - 1] == true)
+                {
+                    V.GloveColor = Color.blue;
+                    V.currEquipped = Tracker;
+                }
+                else
+                {
+                    Purchase();
+                }
                 break;
             case 4:
-                V.GloveColor = Color.green;
+                if (V.Purchased[Tracker - 1] == true)
+                {
+                    V.GloveColor = Color.yellow;
+                    V.currEquipped = Tracker;
+                }
+                else
+                {
+                    Purchase();
+                }
+                break;
+            case 5:
+                if (V.Purchased[Tracker - 1] == true)
+                {
+                    V.GloveColor = Color.green;
+                    V.currEquipped = Tracker;
+                }
+                else
+                {
+                    Purchase();
+
+                }
                 break;
 
         }
-        Debug.Log(V.GloveColor);
+        foreach (GameObject gloves in Gloves)
+        {
+            Debug.Log(V.GloveColor + "VS " + gloves.GetComponent<Renderer>().material.color);
+        }
     }
-
+    public void Purchase()
+    {
+        if (GP >= 5)
+        {
+            removeGP();
+            V.Purchased[Tracker - 1] = true;
+        }
+    }
     public void addGP() {
-        GP += 5;
+        GP += 1;
     }
 
     public void removeGP() { GP -= 5; }

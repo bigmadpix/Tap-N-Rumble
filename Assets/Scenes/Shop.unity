@@ -878,7 +878,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 'MainMenu '
+          m_StringArgument: MainMenu
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &383068511
@@ -1383,7 +1383,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1846605292}
         m_TargetAssemblyTypeName: ShopCode, Assembly-CSharp
-        m_MethodName: EquipColor
+        m_MethodName: addGP
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2049,6 +2049,7 @@ MonoBehaviour:
   - {fileID: 1908068244}
   GP: 0
   GPText: {fileID: 2108624308}
+  buyOrEquip: {fileID: 377494291}
 --- !u!114 &1846605293
 MonoBehaviour:
   m_ObjectHideFlags: 0
