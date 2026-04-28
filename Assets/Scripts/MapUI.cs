@@ -3,6 +3,7 @@ using TMPro;
 public class MapUI : MonoBehaviour
 {
     public TextMeshProUGUI healthTxt;
+    public TextMeshProUGUI dollerText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -13,5 +14,6 @@ public class MapUI : MonoBehaviour
     void Update()
     {
         healthTxt.text = $"HP: {GameManager.instance.playerDat.currHP}%";
+        dollerText.text = "$" + GameManager.instance.playerDat.dollers.ToString();
     }
 }

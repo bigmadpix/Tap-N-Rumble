@@ -14,7 +14,7 @@ public class Perk : ScriptableObject
     public PerkType perkType;
     public Sprite image;
     public MonoScript perkEffect;
-
+    public int perkCost = 0;
     public Effect GetEffect()
     {
         if (perkEffect == null)

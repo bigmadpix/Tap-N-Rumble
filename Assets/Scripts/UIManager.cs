@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
     public Player player;
     public TextMeshProUGUI playerHPTxt;
     public TextMeshProUGUI playerSPTxt;
-
+    public TextMeshProUGUI enemyName;
     public GameObject gameOverCanvas;
     BoxerAIEnemy BoxerAIEnemy;
 
@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        enemyName.text = GameObject.FindGameObjectWithTag("Enemy").GetComponent<BoxerAIEnemy>().getType() +" Man:";
         damageIndicator.color = damageColor;
         damageColor.a -= 0.1f;
 

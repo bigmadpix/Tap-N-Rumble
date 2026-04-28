@@ -17,6 +17,7 @@ public class TimeOut : Effect
 
     public override void OnPassive()
     {
+
         if (isActive) { 
             
             Player.instance.deathPrevention = true;

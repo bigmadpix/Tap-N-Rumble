@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: PlayBook
   m_EditorClassIdentifier: 
   perkName: Play Book
-  perkDescription: Test Description
+  perkDescription: It's a strange paperback book detailing the exact events that
+    are going to occur. And no, the boxing league is NOT scripted. I think.
   perkType: 2
   image: {fileID: 0}
   perkEffect: {fileID: 11500000, guid: 3d4b6118043f02645b4e370c9d2177f8, type: 3}
+  perkCost: 25

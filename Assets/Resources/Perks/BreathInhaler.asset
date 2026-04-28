@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: BreathInhaler
   m_EditorClassIdentifier: 
   perkName: Breath Inhaler
-  perkDescription: Test Description
+  perkDescription: A device used to suppport your breathing, because you have asthma,
+    of course.
   perkType: 3
   image: {fileID: 0}
   perkEffect: {fileID: 11500000, guid: 8f8f50b5a03103b44a0a7d5a18b21ecb, type: 3}
+  perkCost: 45
