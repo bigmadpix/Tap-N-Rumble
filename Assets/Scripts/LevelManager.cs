@@ -44,6 +44,7 @@ public class LevelManager : MonoBehaviour
         if (currentNode.nodeType == LevelNode.NodeType.Boss) { 
         
             winCanvas.SetActive(true);
+            V.getGP++;
         }
     }
 }

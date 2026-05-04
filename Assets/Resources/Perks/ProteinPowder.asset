@@ -16,5 +16,5 @@ MonoBehaviour:
   perkDescription: Made of pure WHEY protein, used to BULK up and gain MUSCLE.
   perkType: 4
   image: {fileID: 0}
-  perkEffect: {fileID: 11500000, guid: d1de75acfcdbcf8479bb8b479a5abb94, type: 3}
+  perkEffect: BulkingSeason
   perkCost: 60

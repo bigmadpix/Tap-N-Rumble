@@ -16,5 +16,5 @@ MonoBehaviour:
   perkDescription: The whistle your coach gave you, in case of emergency.
   perkType: 3
   image: {fileID: 0}
-  perkEffect: {fileID: 11500000, guid: 82a53cee491ce48498bb6cd6fb934e0e, type: 3}
+  perkEffect: TimeOut
   perkCost: 10

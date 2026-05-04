@@ -17,5 +17,5 @@ MonoBehaviour:
     easier.
   perkType: 1
   image: {fileID: 0}
-  perkEffect: {fileID: 11500000, guid: 0669b8e973d9a3b4ab18e77066398fb0, type: 3}
+  perkEffect: ComboFlow
   perkCost: 15

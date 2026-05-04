@@ -17,5 +17,5 @@ MonoBehaviour:
     you.
   perkType: 5
   image: {fileID: 0}
-  perkEffect: {fileID: 11500000, guid: 0f7aa62772c863848998dbd57ff9bb96, type: 3}
+  perkEffect: GlassCannon
   perkCost: 15

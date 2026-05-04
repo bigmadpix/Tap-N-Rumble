@@ -13,7 +13,7 @@ public class Perk : ScriptableObject
     public string perkDescription;
     public PerkType perkType;
     public Sprite image;
-    public MonoScript perkEffect;
+    public string perkEffect;
     public int perkCost = 0;
     public Effect GetEffect()
     {
@@ -31,7 +31,7 @@ public class Perk : ScriptableObject
         foreach (var effectType in effectTypes)
         {
 
-                if (perkEffect != null && effectType.Name == perkEffect.GetClass().Name)
+                if (perkEffect != null && effectType.Name == perkEffect)
                 {
                     Effect effectTemp = (Effect)Activator.CreateInstance(effectType);
                     effectTemp.parentPerk = this;

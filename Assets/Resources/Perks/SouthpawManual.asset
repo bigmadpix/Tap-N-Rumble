@@ -17,5 +17,5 @@ MonoBehaviour:
     It's odd.
   perkType: 5
   image: {fileID: 0}
-  perkEffect: {fileID: 11500000, guid: 08e28cdfafaa8b94e985ff33daea4015, type: 3}
+  perkEffect: FlippedControls
   perkCost: 125

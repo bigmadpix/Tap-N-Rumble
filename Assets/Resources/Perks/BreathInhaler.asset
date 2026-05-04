@@ -17,5 +17,5 @@ MonoBehaviour:
     of course.
   perkType: 3
   image: {fileID: 0}
-  perkEffect: {fileID: 11500000, guid: 8f8f50b5a03103b44a0a7d5a18b21ecb, type: 3}
+  perkEffect: FocusBreathing
   perkCost: 45

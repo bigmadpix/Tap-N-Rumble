@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
-using static UnityEditor.Experimental.GraphView.GraphView;
+
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 public class BoxerAIEnemy : MonoBehaviour
@@ -412,7 +412,7 @@ public class BoxerAIEnemy : MonoBehaviour
 
         }
         if (DF == Difficulty.Practice && trainingWheels == false && tutorialFinish == false) { stamina = 50; tutorialFinish = true; }
-        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 4) { trainingWheels = false; }
+        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 3) { trainingWheels = false; }
         Vector3 deltaPos = transform.position - prev;
         deltaX = deltaPos.x;
 
@@ -441,10 +441,22 @@ public class BoxerAIEnemy : MonoBehaviour
                     switch (type)
                     {
                         case "Boss":
-                            string[] curPatt = patterns[nextPunch % (patterns.Length - 1)].Split(',');
-                            next = 0;
-                            StartCoroutine("attackPattern", curPatt);
-                            patternStarted = true;
+                            if (ChargeUp <= 100f)
+                            {
+                                curPatt = patterns[nextPunch % 6].Split(',');
+                                next = 0;
+                                StartCoroutine("attackPattern", curPatt);
+                                patternStarted = true;
+                            }
+                            else
+                            {
+                                curPatt = patterns[Random.Range(6, 9)].Split(",");
+                                next = 0;
+                                attackSpeed += 0.25f;
+                                StartCoroutine("attackPattern", curPatt);
+                                patternStarted = true;
+                                ChargeUp = 0;
+                            }
                             break;
                         case "Attack":
                             curPatt = patterns[nextPunch % (patterns.Length - 1)].Split(',');

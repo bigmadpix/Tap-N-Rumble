@@ -17,5 +17,5 @@ MonoBehaviour:
     it comes to vision.
   perkType: 2
   image: {fileID: 0}
-  perkEffect: {fileID: 11500000, guid: e3d74c332d2e9b74aa861bb507a228a9, type: 3}
+  perkEffect: PerfectVision
   perkCost: 250

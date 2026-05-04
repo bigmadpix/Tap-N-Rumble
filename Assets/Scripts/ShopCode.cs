@@ -13,11 +13,13 @@ public class ShopCode : MonoBehaviour
     {
         SetColor();
         Tracker = V.currEquipped;
+        GP = V.getGP;
     }
 
     // Update is called once per frame
     void Update()
     {
+        V.getGP = GP;
         GPText.text = "GP: " + GP;
         if(V.Purchased[Tracker-1] == true)
         {
@@ -33,7 +35,7 @@ public class ShopCode : MonoBehaviour
         }
         else
         {
-            buyOrEquip.text = "Buy";
+            buyOrEquip.text = "Buy (5GP)";
         }
     }
 

@@ -315,7 +315,7 @@ public class Player : MonoBehaviour
     public void OnShake()
     {
         if (isDead) { return; }
-        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 0) { TutorialManager.Instance.tutorialStep++; }
+        if (TutorialManager.Instance.isActive && TutorialManager.Instance.tutorialStep == 2) { TutorialManager.Instance.tutorialStep++; }
         Debug.Log("Initiating Super Special Move!!");
         var enemy = GameObject.FindGameObjectWithTag("Enemy");
         if (enemy != null) { enemy.GetComponent<BoxerAIEnemy>().GetPunched(playerSP); playerSP = 0; } else
